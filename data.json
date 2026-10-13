@@ -1,0 +1,253 @@
+{
+  "updated_at": "2026-10-13T11:48:15.233839+00:00",
+  "as_of_date": "2026-10-13",
+  "macro": {
+    "USD_TRY": {
+      "symbol": "TRY=X",
+      "price": 49.36,
+      "change_pct": 0.01
+    },
+    "BIST_100": {
+      "symbol": "XU100.IS",
+      "price": 12253.81,
+      "change_pct": -0.1
+    },
+    "GOLD_USD": {
+      "symbol": "GC=F",
+      "price": 4210.7,
+      "change_pct": 0.48
+    }
+  },
+  "portfolio": {
+    "total_value": 4776.56,
+    "cash_try": 31.65,
+    "items": [
+      {
+        "ticker": "ALTIN.S1",
+        "name": "Darphane Altın Sertifikası",
+        "lot": 14,
+        "price": 71.51,
+        "change_pct": 0.0,
+        "market_value": 1001.14,
+        "sector": "Emtia / Altın",
+        "pe_ratio": null,
+        "pb_ratio": null,
+        "weight_pct": 20.96
+      },
+      {
+        "ticker": "HRKET",
+        "name": "Hareket Proje Taşımacılığı",
+        "lot": 59,
+        "price": 10.11,
+        "change_pct": 4.55,
+        "market_value": 596.49,
+        "sector": "Lojistik / Enerji",
+        "pe_ratio": null,
+        "pb_ratio": 2.04,
+        "weight_pct": 12.49
+      },
+      {
+        "ticker": "HDFGS",
+        "name": "Hedef Girişim Sermayesi",
+        "lot": 320,
+        "price": 1.76,
+        "change_pct": 10.0,
+        "market_value": 563.2,
+        "sector": "Girişim Sermayesi",
+        "pe_ratio": 3.09,
+        "pb_ratio": 0.46,
+        "weight_pct": 11.79
+      },
+      {
+        "ticker": "AKBNK",
+        "name": "Akbank T.A.Ş.",
+        "lot": 7,
+        "price": 68.8,
+        "change_pct": 0.66,
+        "market_value": 481.6,
+        "sector": "Bankacılık",
+        "pe_ratio": 5.4,
+        "pb_ratio": 1.1,
+        "weight_pct": 10.08
+      },
+      {
+        "ticker": "SASA",
+        "name": "Sasa Polyester Sanayi",
+        "lot": 250,
+        "price": 1.85,
+        "change_pct": -1.07,
+        "market_value": 462.5,
+        "sector": "Petrokimya",
+        "pe_ratio": null,
+        "pb_ratio": 0.45,
+        "weight_pct": 9.68
+      },
+      {
+        "ticker": "INFO",
+        "name": "İnfo Yatırım Menkul Değerler",
+        "lot": 336,
+        "price": 1.27,
+        "change_pct": -5.93,
+        "market_value": 426.72,
+        "sector": "Aracı Kurum",
+        "pe_ratio": null,
+        "pb_ratio": 0.59,
+        "weight_pct": 8.93
+      },
+      {
+        "ticker": "GENIL",
+        "name": "Gen İlaç ve Sağlık Ürünleri",
+        "lot": 84,
+        "price": 5.35,
+        "change_pct": 4.29,
+        "market_value": 449.4,
+        "sector": "İlaç / Sağlık",
+        "pe_ratio": 21.4,
+        "pb_ratio": 1.84,
+        "weight_pct": 9.41
+      },
+      {
+        "ticker": "MANAS",
+        "name": "Manas Enerji Yönetimi",
+        "lot": 94,
+        "price": 4.15,
+        "change_pct": -8.99,
+        "market_value": 390.1,
+        "sector": "Enerji / Sayaç",
+        "pe_ratio": null,
+        "pb_ratio": 2.38,
+        "weight_pct": 8.17
+      },
+      {
+        "ticker": "PEKGY",
+        "name": "Peker GYO",
+        "lot": 256,
+        "price": 1.46,
+        "change_pct": -9.88,
+        "market_value": 373.76,
+        "sector": "GYO / İnşaat",
+        "pe_ratio": 4.06,
+        "pb_ratio": 0.88,
+        "weight_pct": 7.82
+      }
+    ],
+    "target_model": [
+      {
+        "ticker": "ALTIN.S1",
+        "name": "Darphane Altın Sertifikası",
+        "target_weight_pct": 30.0,
+        "role": "TL Devalüasyon & Enflasyon Kalkanı"
+      },
+      {
+        "ticker": "AKBNK",
+        "name": "Akbank T.A.Ş.",
+        "target_weight_pct": 25.0,
+        "role": "BIST 30 Lokomotif & Temettü Gücü"
+      },
+      {
+        "ticker": "HRKET",
+        "name": "Hareket Proje Taşımacılığı",
+        "target_weight_pct": 18.0,
+        "role": "Global Ağır Nakliye & Döviz Geliri"
+      },
+      {
+        "ticker": "GENIL",
+        "name": "Gen İlaç ve Sağlık",
+        "target_weight_pct": 15.0,
+        "role": "Defansif Büyüme & Net Nakit"
+      },
+      {
+        "ticker": "PPF",
+        "name": "Para Piyasası Fonu / Nakit",
+        "target_weight_pct": 12.0,
+        "role": "%50 Faiz Kalkanı & Fırsat Akçesi"
+      }
+    ]
+  },
+  "watchlist": [
+    {
+      "ticker": "THYAO",
+      "symbol": "THYAO.IS",
+      "price": 286.75,
+      "change_pct": 0.35,
+      "market_cap": 393502261248,
+      "pe_ratio": null,
+      "pb_ratio": 18.05,
+      "fifty_two_week_low": 258.25,
+      "fifty_two_week_high": 355.5,
+      "success": true
+    },
+    {
+      "ticker": "ASELS",
+      "symbol": "ASELS.IS",
+      "price": 348.75,
+      "change_pct": 2.05,
+      "market_cap": 1590299983872,
+      "pe_ratio": 42.43,
+      "pb_ratio": 5.18,
+      "fifty_two_week_low": 171.5,
+      "fifty_two_week_high": 450.0,
+      "success": true
+    },
+    {
+      "ticker": "TUPRS",
+      "symbol": "TUPRS.IS",
+      "price": 387.75,
+      "change_pct": 0.78,
+      "market_cap": 747114987520,
+      "pe_ratio": 10.68,
+      "pb_ratio": 1.64,
+      "fifty_two_week_low": 170.8,
+      "fifty_two_week_high": 424.25,
+      "success": true
+    },
+    {
+      "ticker": "BIMAS",
+      "symbol": "BIMAS.IS",
+      "price": 408.75,
+      "change_pct": 3.09,
+      "market_cap": 484687577088,
+      "pe_ratio": 18.49,
+      "pb_ratio": 2.41,
+      "fifty_two_week_low": 256.0,
+      "fifty_two_week_high": 443.25,
+      "success": true
+    },
+    {
+      "ticker": "KCHOL",
+      "symbol": "KCHOL.IS",
+      "price": 212.3,
+      "change_pct": 2.61,
+      "market_cap": 538182090752,
+      "pe_ratio": 30.9,
+      "pb_ratio": 0.68,
+      "fifty_two_week_low": 146.0,
+      "fifty_two_week_high": 232.5,
+      "success": true
+    },
+    {
+      "ticker": "EREGL",
+      "symbol": "EREGL.IS",
+      "price": 37.32,
+      "change_pct": -0.74,
+      "market_cap": 250860404736,
+      "pe_ratio": 32.45,
+      "pb_ratio": 0.79,
+      "fifty_two_week_low": 23.46,
+      "fifty_two_week_high": 45.1,
+      "success": true
+    },
+    {
+      "ticker": "SISE",
+      "symbol": "SISE.IS",
+      "price": 37.72,
+      "change_pct": 0.32,
+      "market_cap": 112874684416,
+      "pe_ratio": 9.18,
+      "pb_ratio": 0.34,
+      "fifty_two_week_low": 32.44,
+      "fifty_two_week_high": 54.1,
+      "success": true
+    }
+  ]
+}

@@ -1181,3 +1181,72 @@ function formatCompact(num) {
   if (num >= 1e3) return (num / 1e3).toFixed(1) + "K";
   return num.toString();
 }
+
+/**
+ * 8. Dinamik GitHub Actions Veri Yükleyici (data.json Fetch Shield)
+ */
+async function loadDynamicData() {
+  try {
+    const res = await fetch("data.json?t=" + new Date().getTime());
+    if (!res.ok) return;
+    const dynamicData = await res.json();
+    if (!dynamicData || !dynamicData.portfolio) return;
+
+    // Portföy güncel değerlerini güncelle
+    if (dynamicData.portfolio.items && typeof PORTFOLIO_ITEMS !== "undefined") {
+      dynamicData.portfolio.items.forEach((item) => {
+        if (PORTFOLIO_ITEMS[item.ticker]) {
+          PORTFOLIO_ITEMS[item.ticker].price = item.price;
+          PORTFOLIO_ITEMS[item.ticker].value = item.market_value;
+          PORTFOLIO_ITEMS[item.ticker].weight = item.weight_pct;
+        }
+        if (FALLBACK_DATA && FALLBACK_DATA[item.ticker]) {
+          FALLBACK_DATA[item.ticker].price = item.price;
+          FALLBACK_DATA[item.ticker].change_percent = item.change_pct;
+        }
+      });
+    }
+
+    // İzleme listesi BIST çiplerini güncelle
+    if (dynamicData.watchlist && typeof FALLBACK_DATA !== "undefined") {
+      dynamicData.watchlist.forEach((item) => {
+        if (FALLBACK_DATA[item.ticker]) {
+          FALLBACK_DATA[item.ticker].price = item.price;
+          FALLBACK_DATA[item.ticker].change_percent = item.change_pct;
+        }
+      });
+    }
+
+    // Portföy toplam değerini güncelle
+    const totalValEl = document.getElementById("portfolio-total-value");
+    if (totalValEl && dynamicData.portfolio.total_value) {
+      totalValEl.textContent = formatCurrency(dynamicData.portfolio.total_value) + " TL";
+    }
+
+    // UI bileşenlerini yeniden render et
+    if (document.getElementById("portfolio-table-body") && typeof renderPortfolio === "function") {
+      renderPortfolio();
+    }
+    if (FALLBACK_DATA && FALLBACK_DATA[currentTicker] && typeof renderKPIs === "function") {
+      renderKPIs(FALLBACK_DATA[currentTicker]);
+    }
+
+    // Üst bara son güncelleme rozeti ekle
+    const marketStatus = document.getElementById("market-status");
+    if (marketStatus && dynamicData.updated_at) {
+      const dt = new Date(dynamicData.updated_at);
+      const timeStr = dt.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+      const badge = document.createElement("span");
+      badge.className = "text-[10px] text-emerald-400 font-mono ml-2 border border-emerald-500/30 px-1.5 py-0.5 rounded";
+      badge.textContent = `⚡ Veri: ${timeStr} (Otomatik)`;
+      marketStatus.appendChild(badge);
+    }
+  } catch (e) {
+    console.warn("data.json dinamik yükleme fallback'e düştü:", e);
+  }
+}
+
+// Otomatik başlatıcıya bağla
+window.addEventListener("DOMContentLoaded", () => {
+  loadDynamicData();
+});
