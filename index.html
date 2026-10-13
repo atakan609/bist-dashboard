@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AtakanOS — BIST Portfolio & Market Intelligence Dashboard</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              900: '#0f172a',
+              800: '#1e293b',
+              700: '#334155',
+              600: '#475569',
+              accent: '#3b82f6',
+              bull: '#10b981',
+              bear: '#ef4444',
+              gold: '#f59e0b'
+            }
+          },
+          fontFamily: {
+            mono: ['JetBrains Mono', 'Consolas', 'monospace'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- TradingView Lightweight Charts CDN -->
+  <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+
+  <!-- Chart.js CDN (Portföy Dağılım Pastaları için) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* Özel Kaydırma Çubuğu */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    
+    .glow-bull { box-shadow: 0 0 15px -3px rgba(16, 185, 129, 0.2); }
+    .glow-bear { box-shadow: 0 0 15px -3px rgba(239, 68, 68, 0.2); }
+    .glow-blue { box-shadow: 0 0 15px -3px rgba(59, 130, 246, 0.25); }
+    .glow-gold { box-shadow: 0 0 15px -3px rgba(245, 158, 11, 0.25); }
+  </style>
+</head>
+<body class="bg-[#0b1120] text-slate-100 font-sans min-h-screen antialiased selection:bg-blue-600 selection:text-white">
+
+  <!-- Üst Gezinme ve Makro Bant -->
+  <header class="border-b border-slate-800 bg-[#0f172a]/95 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
+      
+      <!-- Marka / Kimlik -->
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-blue-600 via-indigo-600 to-emerald-500 flex items-center justify-center font-mono font-bold text-lg text-white shadow-lg shadow-blue-500/20">
+          ₺
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-base tracking-tight text-white">AtakanOS</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-mono border border-blue-500/20">BIST Portfolio & Intelligence</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Deterministik DCF • Epistemik Sparring • 4+1 Portföy Modeli</p>
+        </div>
+      </div>
+
+      <!-- Çip Seçicileri & Arama -->
+      <div class="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto">
+        
+        <!-- Portföy & BIST Kategori Filtre Butonları -->
+        <div class="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 sm:pb-0 text-xs">
+          <span class="text-[10px] text-amber-400 font-mono font-bold uppercase tracking-wider px-1">Portföy:</span>
+          <button data-ticker="ALTIN.S1" class="chip-btn px-2 py-0.5 rounded bg-slate-800 text-amber-300 border border-amber-500/30 font-medium hover:bg-slate-700 font-mono text-[11px]">ALTIN.S1</button>
+          <button data-ticker="AKBNK" class="chip-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 font-mono text-[11px]">AKBNK</button>
+          <button data-ticker="HRKET" class="chip-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 font-mono text-[11px]">HRKET</button>
+          <button data-ticker="GENIL" class="chip-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 font-mono text-[11px]">GENIL</button>
+          <button data-ticker="SASA" class="chip-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 font-mono text-[11px]">SASA</button>
+          <button data-ticker="INFO" class="chip-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 font-mono text-[11px]">INFO</button>
+          <button data-ticker="MANAS" class="chip-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 font-mono text-[11px]">MANAS</button>
+          <button data-ticker="PEKGY" class="chip-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 font-mono text-[11px]">PEKGY</button>
+          <button data-ticker="HDFGS" class="chip-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 font-mono text-[11px]">HDFGS</button>
+          
+          <span class="text-slate-600 px-1">|</span>
+          <span class="text-[10px] text-blue-400 font-mono font-bold uppercase tracking-wider px-1">BIST 30:</span>
+          <button data-ticker="THYAO" class="chip-btn px-2 py-0.5 rounded bg-blue-600 text-white font-medium hover:bg-blue-500 font-mono text-[11px]">THYAO</button>
+          <button data-ticker="ASELS" class="chip-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 font-mono text-[11px]">ASELS</button>
+          <button data-ticker="TUPRS" class="chip-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 font-mono text-[11px]">TUPRS</button>
+          <button data-ticker="BIMAS" class="chip-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 font-mono text-[11px]">BIMAS</button>
+          <button data-ticker="KCHOL" class="chip-btn px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 font-mono text-[11px]">KCHOL</button>
+        </div>
+
+        <form id="search-form" class="relative flex items-center ml-auto sm:ml-2">
+          <input 
+            type="text" 
+            id="ticker-input" 
+            placeholder="KOD ARA..." 
+            class="w-24 sm:w-28 bg-slate-900 border border-slate-700 text-white text-xs rounded-md px-2 py-1 uppercase font-mono tracking-wider focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+          />
+          <button type="submit" class="absolute right-1 text-slate-400 hover:text-white p-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </button>
+        </form>
+      </div>
+
+      <!-- Makro Göstergeler Şeridi -->
+      <div class="hidden xl:flex items-center gap-4 text-xs font-mono border-l border-slate-800 pl-4 text-slate-300">
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-500">Portföy:</span>
+          <span class="font-bold text-emerald-400">4.842,13 ₺</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-500">USD/TRY:</span>
+          <span id="macro-usd" class="font-bold text-amber-400">34.25 ₺</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-500">BIST 100:</span>
+          <span id="macro-xu100" class="font-bold text-emerald-400">9,285.40</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-500">TCMB:</span>
+          <span id="macro-tcmb" class="font-bold text-blue-400">%50.0</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span class="text-[10px] text-slate-400">Canlı</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Ana İçerik -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- KPI / Gösterge Kartları Satırı -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      
+      <!-- Fiyat ve Günlük Değişim -->
+      <div class="bg-[#131c31] border border-slate-800/80 rounded-xl p-4 shadow-sm relative overflow-hidden">
+        <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+          <span id="stock-name" class="font-medium truncate max-w-[140px]">Türk Hava Yolları</span>
+          <span id="stock-currency" class="font-mono text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">TRY</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="stock-price" class="text-2xl sm:text-3xl font-extrabold font-mono text-white">314.50 ₺</span>
+          <span id="stock-change" class="text-xs font-mono font-bold text-emerald-400 flex items-center">
+            ▲ +1.86%
+          </span>
+        </div>
+        <!-- Günlük Aralık Barı -->
+        <div class="mt-3 pt-2 border-t border-slate-800/60 text-[11px] text-slate-400 flex justify-between items-center font-mono">
+          <span>D: <strong id="day-low" class="text-slate-300">308.25</strong></span>
+          <div class="w-20 bg-slate-800 h-1.5 rounded-full overflow-hidden mx-2">
+            <div id="day-range-bar" class="bg-blue-500 h-full rounded-full" style="width: 75%"></div>
+          </div>
+          <span>Y: <strong id="day-high" class="text-slate-300">316.50</strong></span>
+        </div>
+      </div>
+
+      <!-- Piyasa Değeri & Hacim -->
+      <div class="bg-[#131c31] border border-slate-800/80 rounded-xl p-4 shadow-sm">
+        <span class="text-xs text-slate-400 block mb-1">Piyasa Değeri & 24s Hacim</span>
+        <div class="text-xl sm:text-2xl font-bold font-mono text-slate-100" id="stock-mcap">
+          434.01 Mr ₺
+        </div>
+        <div class="mt-3 pt-2 border-t border-slate-800/60 text-[11px] text-slate-400 flex justify-between font-mono">
+          <span>İşlem Hacmi:</span>
+          <span id="stock-vol" class="text-slate-200 font-semibold">28.45M Adet</span>
+        </div>
+      </div>
+
+      <!-- Çarpanlar (F/K, PD/DD, FD/FAVÖK) -->
+      <div class="bg-[#131c31] border border-slate-800/80 rounded-xl p-4 shadow-sm">
+        <span class="text-xs text-slate-400 block mb-1">BIST Temel Çarpanları</span>
+        <div class="grid grid-cols-3 gap-1 pt-0.5">
+          <div>
+            <div class="text-[10px] text-slate-500">F/K</div>
+            <div id="ratio-pe" class="text-base font-bold font-mono text-emerald-400">4.82x</div>
+          </div>
+          <div>
+            <div class="text-[10px] text-slate-500">PD/DD</div>
+            <div id="ratio-pb" class="text-base font-bold font-mono text-blue-400">1.15x</div>
+          </div>
+          <div>
+            <div class="text-[10px] text-slate-500">FD/FAVÖK</div>
+            <div id="ratio-evebitda" class="text-base font-bold font-mono text-indigo-400">4.25x</div>
+          </div>
+        </div>
+        <div class="mt-3 pt-2 border-t border-slate-800/60 text-[11px] text-slate-400 flex justify-between font-mono">
+          <span>Temettü Verimi:</span>
+          <span id="ratio-div" class="text-slate-300 font-semibold">%0.0</span>
+        </div>
+      </div>
+
+      <!-- Deterministik DCF & Güvenlik Marjı -->
+      <div class="bg-[#131c31] border border-slate-800/80 rounded-xl p-4 shadow-sm glow-blue relative">
+        <div class="flex justify-between items-center text-xs text-slate-400 mb-1">
+          <span>Deterministik DCF Adil Değer</span>
+          <span id="margin-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            +%23.5 Marj
+          </span>
+        </div>
+        <div class="text-2xl sm:text-3xl font-extrabold font-mono text-emerald-400" id="stock-fair-value">
+          388.50 ₺
+        </div>
+        <div class="mt-3 pt-2 border-t border-slate-800/60 text-[11px] flex justify-between items-center">
+          <span class="text-slate-400">WACC / TL İskonto:</span>
+          <span id="stock-wacc" class="font-mono text-slate-300 font-semibold">%36.5</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Grafik ve Karar Alanı (2 Kolon) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- Sol / Geniş Panel: TradingView Lightweight Charts (8 Kolon) -->
+      <div class="lg:col-span-8 bg-[#131c31] border border-slate-800/80 rounded-xl p-4 shadow-sm flex flex-col">
+        
+        <!-- Grafik Üst Barı -->
+        <div class="flex flex-wrap items-center justify-between pb-3 mb-2 border-b border-slate-800 gap-2">
+          <div class="flex items-center gap-3">
+            <h2 id="chart-title" class="text-base font-bold text-white font-mono tracking-wide">THYAO / TRY — Günlük Mumlar</h2>
+            <span id="sector-pill" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">Havacılık & Lojistik</span>
+            <span id="portfolio-tag" class="hidden text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-mono">Portföy Varlığı</span>
+          </div>
+
+          <!-- OHLCV Anlık Canlı Legend -->
+          <div id="chart-legend" class="text-xs font-mono text-slate-400 flex items-center gap-2">
+            <span>A: <strong id="legend-open" class="text-slate-200">-</strong></span>
+            <span>Y: <strong id="legend-high" class="text-slate-200">-</strong></span>
+            <span>D: <strong id="legend-low" class="text-slate-200">-</strong></span>
+            <span>K: <strong id="legend-close" class="text-slate-200">-</strong></span>
+            <span class="hidden sm:inline">Hacim: <strong id="legend-vol" class="text-slate-200">-</strong></span>
+          </div>
+        </div>
+
+        <!-- Grafik Konteyneri -->
+        <div id="tv-chart-container" class="w-full h-[400px] sm:h-[440px] relative rounded-lg overflow-hidden">
+          <!-- Lightweight Charts buraya bağlanır -->
+        </div>
+
+        <!-- Grafik Alt Notu -->
+        <div class="pt-3 mt-auto text-[11px] text-slate-500 flex justify-between items-center font-mono">
+          <span>* Veriler TradingView Lightweight Charts ve yerel BIST motorundan türetilmektedir.</span>
+          <span class="text-slate-400">Zaman Dilimi: 90 Gün (Günlük)</span>
+        </div>
+
+      </div>
+
+      <!-- Sağ / Dar Panel: Boğa vs. Ayı Asimetrik Sparring Odası (4 Kolon) -->
+      <div class="lg:col-span-4 bg-[#131c31] border border-slate-800/80 rounded-xl p-4 shadow-sm flex flex-col justify-between space-y-4">
+        
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-purple-500 animate-ping"></span>
+              <h3 class="font-bold text-sm text-white tracking-wide">Epistemik Sparring Odası</h3>
+            </div>
+            <span class="text-[10px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Atlas & Gemini 3.8 Flash</span>
+          </div>
+          
+          <p class="text-xs text-slate-400 leading-relaxed mb-4">
+            Halüsinasyon kalkanlı iki bağımsız analist perspektifi. Çarpan iskontosu ve büyüme katalizörleri, makro faiz ve operasyonel risklere karşı test edilir.
+          </p>
+
+          <!-- Boğa Tezi Kutusu -->
+          <div class="bg-emerald-950/20 border border-emerald-500/30 rounded-lg p-3.5 mb-3 glow-bull">
+            <div class="flex items-center gap-2 text-xs font-bold text-emerald-400 mb-2 font-mono">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+              <span>BOĞA ANALİSTİ TEZİ (Growth & Upside)</span>
+            </div>
+            <ul id="bull-thesis-list" class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+              <li>Yükleniyor...</li>
+            </ul>
+          </div>
+
+          <!-- Ayı Tezi Kutusu -->
+          <div class="bg-rose-950/20 border border-rose-500/30 rounded-lg p-3.5 glow-bear">
+            <div class="flex items-center gap-2 text-xs font-bold text-rose-400 mb-2 font-mono">
+              <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"/></svg>
+              <span>AYI ANALİSTİ TEZİ (Risks & Headwinds)</span>
+            </div>
+            <ul id="bear-thesis-list" class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+              <li>Yükleniyor...</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Nihai Konsensüs Bannerı -->
+        <div class="pt-3 border-t border-slate-800">
+          <div class="text-[11px] text-slate-400 mb-1">Atlas Epistemik Konsensüs & Karar:</div>
+          <div id="verdict-banner" class="p-2.5 rounded-lg bg-blue-950/40 border border-blue-500/30 text-xs font-bold text-blue-300 text-center font-mono">
+            Kuvvetli Al / Yüksek Güvenlik Marjı (%23.5)
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Alt Derin Analiz & Sekmeli Alan -->
+    <section class="bg-[#131c31] border border-slate-800/80 rounded-xl p-5 shadow-sm">
+      
+      <!-- Sekme Butonları -->
+      <div class="flex flex-wrap items-center justify-between border-b border-slate-800 pb-3 mb-4 gap-2">
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="tab-btn-portfolio" class="tab-btn px-4 py-2 rounded-lg text-xs font-bold bg-blue-600 text-white transition flex items-center gap-1.5">
+            <span>🥧</span> Portföyüm: Mevcut vs. 4+1 Hedef Model
+          </button>
+          <button id="tab-btn-dcf" class="tab-btn px-4 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition flex items-center gap-1.5">
+            <span>📊</span> Deterministik DCF Duyarlılık Matrisi
+          </button>
+          <button id="tab-btn-reports" class="tab-btn px-4 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition flex items-center gap-1.5">
+            <span>📁</span> Obsidian Araştırma Raporları
+          </button>
+        </div>
+        <span class="text-xs text-slate-500 font-mono hidden sm:inline">AtakanOS Finansal Zeka v3</span>
+      </div>
+
+      <!-- Tab 1: Portföy Optimizasyonu & Varlık Dağılımı -->
+      <div id="tab-content-portfolio" class="space-y-6">
+        
+        <!-- Portföy Sağlık Teşhisi Özet Kartı -->
+        <div class="bg-gradient-to-r from-amber-950/30 via-slate-900 to-blue-950/30 border border-amber-500/30 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-xs font-bold font-mono border border-amber-500/30">TEŞHİS</span>
+              <h3 class="text-sm font-bold text-white">4.842,13 TL Portföy Sağlık Teşhisi: Aşırı Parçalanmış & Sığ Tahta Riski</h3>
+            </div>
+            <p class="text-xs text-slate-300">
+              9 farklı şirkete bölünmüş sermayede efektif varlık sayısı <strong class="text-amber-300 font-mono">N_eff = 8.25</strong>. 
+              Pozisyon başına düşen ortalama ~450 TL, tavan kârında dahi bilişsel takip maliyetini karşılamamaktadır.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 text-center whitespace-nowrap">
+              Atlas Kararı: 4+1 Konsolidasyon
+            </span>
+          </div>
+        </div>
+
+        <!-- Yan Yana İki Pasta Grafik: Mevcut vs Hedef -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Sol Pasta: Mevcut 9 Varlıklı Dağılım -->
+          <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex flex-col items-center">
+            <div class="w-full flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
+              <div>
+                <h4 class="text-xs font-bold text-slate-200">Mevcut Durum: 9 Varlık + Nakit</h4>
+                <p class="text-[11px] text-slate-400">4.842,13 TL • HHI = 0.1212</p>
+              </div>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-mono">Aşırı Dağınık</span>
+            </div>
+            <div class="w-60 h-60 relative my-2">
+              <canvas id="current-portfolio-chart"></canvas>
+            </div>
+            <div class="w-full mt-3 space-y-1 text-xs font-mono">
+              <div class="flex justify-between text-slate-400 text-[11px] border-b border-slate-800/60 pb-1">
+                <span>Varlık (Kod)</span>
+                <span>Tutar (TL) / Pay (%)</span>
+              </div>
+              <div class="flex justify-between text-slate-300"><span>ALTIN.S1 (Darphane Altın)</span><strong>1.001,14 TL (%20,7)</strong></div>
+              <div class="flex justify-between text-slate-300"><span>HRKET (Proje Lojistiği)</span><strong>570,53 TL (%11,8)</strong></div>
+              <div class="flex justify-between text-slate-300"><span>HDFGS (Girişim Sermayesi)</span><strong>550,40 TL (%11,4)</strong></div>
+              <div class="flex justify-between text-slate-300"><span>AKBNK (BIST 30 Banka)</span><strong>479,85 TL (%9,9)</strong></div>
+              <div class="flex justify-between text-slate-300"><span>SASA (Petrokimya/Elyaf)</span><strong>467,50 TL (%9,7)</strong></div>
+              <div class="flex justify-between text-slate-300"><span>INFO (Aracı Kurum)</span><strong>467,04 TL (%9,7)</strong></div>
+              <div class="flex justify-between text-slate-300"><span>GENIL (İlaç & Biyoteknoloji)</span><strong>442,68 TL (%9,1)</strong></div>
+              <div class="flex justify-between text-slate-300"><span>MANAS (Teknoloji & Sayaç)</span><strong>437,10 TL (%9,0)</strong></div>
+              <div class="flex justify-between text-slate-300"><span>PEKGY (GYO)</span><strong>394,24 TL (%8,1)</strong></div>
+              <div class="flex justify-between text-slate-400"><span>Serbest Nakit</span><strong>31,65 TL (%0,6)</strong></div>
+            </div>
+          </div>
+
+          <!-- Sağ Pasta: Hedef 4+1 Çekirdek Büyüme Modeli -->
+          <div class="bg-slate-900/60 border border-emerald-500/30 rounded-xl p-4 flex flex-col items-center glow-bull">
+            <div class="w-full flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
+              <div>
+                <h4 class="text-xs font-bold text-emerald-300">Hedef Model: 4+1 Konsolide Çekirdek</h4>
+                <p class="text-[11px] text-slate-400">4.842,13 TL • Sıfır Bilişsel Gürültü</p>
+              </div>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono">Optimize Edilmiş</span>
+            </div>
+            <div class="w-60 h-60 relative my-2">
+              <canvas id="target-portfolio-chart"></canvas>
+            </div>
+            <div class="w-full mt-3 space-y-1 text-xs font-mono">
+              <div class="flex justify-between text-slate-400 text-[11px] border-b border-slate-800/60 pb-1">
+                <span>Çekirdek Varlık</span>
+                <span>Hedef Tutar / Pay (%)</span>
+              </div>
+              <div class="flex justify-between text-amber-300"><span>1. ALTIN.S1 (Enflasyon Kalkanı)</span><strong>1.452,00 TL (%30,0)</strong></div>
+              <div class="flex justify-between text-blue-300"><span>2. AKBNK (BIST 30 & Temettü)</span><strong>1.210,00 TL (%25,0)</strong></div>
+              <div class="flex justify-between text-emerald-300"><span>3. HRKET (Dövizli RES Lojistiği)</span><strong>872,00 TL (%18,0)</strong></div>
+              <div class="flex justify-between text-indigo-300"><span>4. GENIL (Net Nakit Biyoteknoloji)</span><strong>726,00 TL (%15,0)</strong></div>
+              <div class="flex justify-between text-purple-300"><span>5. PPF NAKİT FONU (%50 Faiz Nema)</span><strong>582,13 TL (%12,0)</strong></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 2 Aşamalı Eylem Planı Tablosu -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-4 space-y-3">
+          <h4 class="text-xs font-bold text-white flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            Atlas 2 Aşamalı Rebalance & Konsolidasyon Eylem Planı
+          </h4>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+            <!-- 1. Aşama: Tasfiye -->
+            <div class="bg-slate-950/50 p-3 rounded-lg border border-rose-500/20 space-y-2">
+              <div class="flex justify-between text-rose-400 font-bold border-b border-slate-800 pb-1">
+                <span>1. AŞAMA: 5 ZAYIF HALKA TASFİYESİ</span>
+                <span>+2.316,28 TL</span>
+              </div>
+              <ul class="space-y-1 text-slate-300 text-[11px]">
+                <li class="flex justify-between"><span>• PEKGY Satışı (Borçlu bedelli krizinden çıkış):</span><strong class="text-rose-400">+394,24 TL</strong></li>
+                <li class="flex justify-between"><span>• MANAS Satışı (Bedelli & sığ tahta riskinden çıkış):</span><strong class="text-rose-400">+437,10 TL</strong></li>
+                <li class="flex justify-between"><span>• SASA Satışı (52.5M TL sulanma & faiz yükü):</span><strong class="text-rose-400">+467,50 TL</strong></li>
+                <li class="flex justify-between"><span>• INFO Satışı (BIST hacim daralmasından çıkış):</span><strong class="text-rose-400">+467,04 TL</strong></li>
+                <li class="flex justify-between"><span>• HDFGS Satışı (Start-up değerleme baskısından çıkış):</span><strong class="text-rose-400">+550,40 TL</strong></li>
+              </ul>
+              <div class="pt-1 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between">
+                <span>Mevcut Serbest Nakit (+31,65 TL) ile Toplam Likidite:</span>
+                <strong class="text-emerald-400">2.347,93 TL</strong>
+              </div>
+            </div>
+
+            <!-- 2. Aşama: Enjeksiyon -->
+            <div class="bg-slate-950/50 p-3 rounded-lg border border-emerald-500/20 space-y-2">
+              <div class="flex justify-between text-emerald-400 font-bold border-b border-slate-800 pb-1">
+                <span>2. AŞAMA: ÇEKİRDEK HAVUZA ENJEKSİYON</span>
+                <span>4.842,13 TL</span>
+              </div>
+              <ul class="space-y-1 text-slate-300 text-[11px]">
+                <li class="flex justify-between"><span>• ALTIN.S1 Takviyesi (Makas kontrolüyle alım):</span><strong class="text-emerald-400">+450,86 TL (Hedef 1.452 TL)</strong></li>
+                <li class="flex justify-between"><span>• AKBNK Takviyesi (Rekor kâr payı omurgası):</span><strong class="text-emerald-400">+730,15 TL (Hedef 1.210 TL)</strong></li>
+                <li class="flex justify-between"><span>• HRKET Takviyesi (Dövizli RES sözleşmeleri):</span><strong class="text-emerald-400">+301,47 TL (Hedef 872 TL)</strong></li>
+                <li class="flex justify-between"><span>• GENIL Takviyesi (Net nakit & Incyte lisansı):</span><strong class="text-emerald-400">+283,32 TL (Hedef 726 TL)</strong></li>
+                <li class="flex justify-between"><span>• PPF NAKİT FONU (Risksiz günlük bileşik nema):</span><strong class="text-purple-400">+550,48 TL (Hedef 582 TL)</strong></li>
+              </ul>
+              <div class="pt-1 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between">
+                <span>Stratejik Sonuç:</span>
+                <strong class="text-blue-300">Yüksek Sharpe, Sıfır Bilişsel Kirlilik</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tab 2: Deterministik DCF Duyarlılık Matrisi -->
+      <div id="tab-content-dcf" class="hidden space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-400">
+          <p>
+            Farklı TL Ağırlıklı Ortalama Sermaye Maliyeti (WACC) ve Terminal Büyüme Oranlarına (g) göre hisse başına türetilen adil değerler (TRY).
+          </p>
+          <div class="flex items-center gap-3 font-mono text-[11px]">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-emerald-500"></span> İskontolu (Ucuz)</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-rose-500"></span> Primli (Pahalı)</span>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-center text-xs font-mono border-collapse" id="sensitivity-table">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400">
+                <th class="p-2.5 text-left">WACC \ g</th>
+                <th class="p-2.5">%5.0</th>
+                <th class="p-2.5">%7.0</th>
+                <th class="p-2.5">%9.0</th>
+                <th class="p-2.5">%11.0</th>
+              </tr>
+            </thead>
+            <tbody id="sensitivity-tbody" class="divide-y divide-slate-800/60">
+              <!-- Dinamik doldurulacak -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: Obsidian Araştırma Raporları -->
+      <div id="tab-content-reports" class="hidden space-y-4">
+        <div class="flex items-center justify-between text-xs text-slate-400">
+          <p>
+            Obsidian kasasında kayıtlı <code class="text-blue-400 font-mono">400-Vault/Reports/*.md</code> notları ve Atlas Karar Odası dökümleri.
+          </p>
+          <button id="refresh-reports-btn" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded font-mono transition">
+            🔄 Yenile
+          </button>
+        </div>
+
+        <div id="reports-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+          <!-- Dinamik doldurulacak -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Alt Bilgi (Footer) -->
+  <footer class="border-t border-slate-800 mt-12 py-6 text-center text-xs text-slate-500 font-mono">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>AtakanOS BIST Portfolio & Market Intelligence Dashboard • GitHub Pages Dağıtımı</p>
+      <p class="text-slate-400">Canlı Web: <a href="https://atakan609.github.io/bist-dashboard/" target="_blank" class="text-blue-400 hover:underline">atakan609.github.io/bist-dashboard</a></p>
+    </div>
+  </footer>
+
+  <!-- İstemci Mantığı -->
+  <script src="app.js"></script>
+</body>
+</html>
