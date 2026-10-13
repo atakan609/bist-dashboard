@@ -520,49 +520,211 @@ const FALLBACK_DATA = {
   }
 };
 
-// 2. Obsidian Araştırma Raporları Sabit Kalkanı
+// 2. Obsidian Araştırma Raporları Sabit Kalkanı & Derin Şirket Analizleri
 const STATIC_REPORTS = [
   {
     ticker: "PORTFOY",
     title: "BIST Portföy Sağlık Teşhisi, Şirket Kararları & Stratejik Master Rapor",
     date: "2026-10-13",
     verdict: "Radikal Konsolidasyon Gerekli (4+1 Model)",
-    summary: "4.842 TL, 9 Varlık, N_eff = 8.25. 5 zayıf halkanın (PEKGY, MANAS, SASA, INFO, HDFGS) tasfiyesi ile açığa çıkan 2.316 TL'nin 4 çekirdek ve PPF'ye aktarımı."
+    summary: "4.842 TL, 9 Varlık, N_eff = 8.25. 5 zayıf halkanın (PEKGY, MANAS, SASA, INFO, HDFGS) tasfiyesi ile açığa çıkan 2.316 TL'nin 4 çekirdek ve PPF'ye aktarımı.",
+    full_content: `
+      <div class="space-y-4">
+        <div class="bg-amber-950/30 border border-amber-500/30 p-3.5 rounded-xl">
+          <h4 class="font-bold text-amber-300 text-sm mb-1">🚨 Yapısal Teşhis: Aşırı Çeşitlendirme (Over-Diversification)</h4>
+          <p>4.842,13 TL'lik sermaye 9 farklı enstrümana bölünmüş durumda. Efektif varlık sayısı <strong>N_eff = 8.25</strong> ve Herfindahl-Hirschman İndeksi (HHI) <strong>0.1212</strong> seviyesinde. Pozisyon başına ortalama 450 TL düşmekte, tavan kârında dahi bilişsel takip maliyetini karşılamamaktadır.</p>
+        </div>
+        <div class="space-y-2">
+          <h4 class="font-bold text-white text-sm">🎯 4+1 Konsolide Çekirdek Hedef Modeli:</h4>
+          <ul class="space-y-1.5 list-disc list-inside text-slate-300">
+            <li><strong>ALTIN.S1 (%30 - 1.452 TL):</strong> Enflasyon ve kur şoku kalkanı (Makas kontrolü şartıyla).</li>
+            <li><strong>AKBNK (%25 - 1.210 TL):</strong> BIST 30 omurgası, rekor 11,45 Mr TL temettü ve dezenflasyon NIM toparlanması.</li>
+            <li><strong>HRKET (%18 - 872 TL):</strong> Nordex & Umman Duqm dövizli rüzgar enerjisi lojistik sözleşmeleri.</li>
+            <li><strong>GENIL (%15 - 726 TL):</strong> Net nakit pozisyonu, Incyte 5 yıllık lisansı ve Azerbaycan ihracat fabrikası.</li>
+            <li><strong>PPF / Nakit (%12 - 582 TL):</strong> %50 faizle günlük bileşik nema ve piyasa düşüşlerinde alım akçesi.</li>
+          </ul>
+        </div>
+        <div class="bg-slate-900 p-3 rounded-lg border border-slate-800">
+          <h4 class="font-bold text-rose-400 text-xs mb-1">⚠️ Tasfiye Edilecek 5 Zayıf Halka (+2.316 TL):</h4>
+          <p class="text-slate-400">PEKGY (394 TL), MANAS (437 TL), SASA (467 TL), INFO (467 TL), HDFGS (550 TL) kademeli tasfiye edilerek çekirdek havuza enjekte edilmelidir.</p>
+        </div>
+      </div>
+    `
   },
   {
-    ticker: "THYAO",
-    title: "Türk Hava Yolları Temel & Deterministik DCF Değerleme Raporu",
+    ticker: "ALTIN.S1",
+    title: "Darphane Altın Sertifikası: Enflasyon Kalkanı & Prim Makası Analizi",
     date: "2026-10-13",
-    verdict: "Kuvvetli Al (%23.5 Güvenlik Marjı)",
-    summary: "F/K 4.82x çarpanı, dövizli gelir kalkanı, Turkish Cargo büyümesi ve 388.50 TL adil değer."
+    verdict: "Tut / Enflasyon Çıpası (%30 Hedef, Makas Takibi)",
+    summary: "Borsa İstanbul nezdinde stopajsız (%0) ve saklama maliyetsiz fiziki altına dönüşüm hakkı. Spot altına göre prim makası kontrol edilmeli.",
+    full_content: `
+      <div class="space-y-4">
+        <p><strong>Yatırım Tezi:</strong> Darphane Altın Sertifikası, portföyün TL devalüasyonu ve enflasyon şoklarına karşı en sağlam defansif çıpasıdır. 50 tonluk fiziki külçe altın karşılığı bulunur ve BIST nezdinde %0 stopajla işlem görür.</p>
+        <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+          <div class="p-3 bg-emerald-950/20 border border-emerald-500/30 rounded-lg">
+            <span class="text-emerald-400 font-bold block mb-1">🟢 Güçlü Yönler</span>
+            • Sıfır saklama maliyeti ve BIST likiditesi<br>
+            • Darphane'den fiziki külçe altına dönüşüm garantisi<br>
+            • Küresel faiz indirim döngüsünde ons altın desteği
+          </div>
+          <div class="p-3 bg-rose-950/20 border border-rose-500/30 rounded-lg">
+            <span class="text-rose-400 font-bold block mb-1">🔴 Kritik Risk</span>
+            • Fiziki gram altına göre %30-%60 aralığında primli fiyatlama anomalisi.<br>
+            • İlave alımlar prim makasının %5 altına indiği dönemlerde yapılmalıdır.
+          </div>
+        </div>
+      </div>
+    `
   },
   {
     ticker: "AKBNK",
-    title: "Akbank Bilanço, Rekor Temettü & NIM Genişlemesi",
+    title: "Akbank T.A.Ş.: Rekor Nakit Kâr Payı & NIM Genişlemesi",
     date: "2026-10-13",
-    verdict: "Kuvvetli Al (%19.26 SYR)",
-    summary: "11,45 Mr TL nakit temettü, dezenflasyon ile toparlanan net faiz marjı ve 72.00 TL hedef değer."
+    verdict: "Kuvvetli Al (%19.26 SYR, 72.00 TL Hedef)",
+    summary: "11,45 Mr TL nakit temettü, dezenflasyon sürecinde toparlanan net faiz marjı, F/K 4.10x ve PD/DD 0.92x.",
+    full_content: `
+      <div class="space-y-4">
+        <p><strong>Yatırım Tezi:</strong> Akbank, Türk bankacılık sektörünün en yüksek Sermaye Yeterlilik Rasyosuna (%19,26) sahiptir. 2025'te 6,35 Mr TL, 2026'da 11,45 Mr TL nakit temettü ödemiştir. Dezenflasyonla birlikte mevduat faiz maliyeti geriledikçe Net Faiz Marjı (NIM) hızla toparlanmaktadır.</p>
+        <div class="bg-blue-950/30 border border-blue-500/30 p-3 rounded-lg text-xs font-mono">
+          <strong>Atlas Kararı:</strong> Portföydeki 479,85 TL'lik pozisyon +730 TL takviye edilerek 1.210 TL'ye (%25) çıkarılmalı ve ana lokomotif yapılmalıdır.
+        </div>
+      </div>
+    `
   },
   {
     ticker: "HRKET",
-    title: "Hareket Proje Taşımacılığı Nordex & Umman RES Sözleşmeleri",
+    title: "Hareket Proje Taşımacılığı: Nordex & Umman RES Sözleşmeleri",
     date: "2026-10-13",
-    verdict: "Kuvvetli Al (Dövizli Backlog)",
-    summary: "Nordex (7,2M $) ve Umman Duqm (11,9M+ $) sözleşmeleri. Tasfiyeden çıkarılarak %18 çekirdek hedef kilitlendi."
+    verdict: "Kuvvetli Al (Dövizli Backlog, %18 Hedef)",
+    summary: "Nordex (7,2M $) ve Umman Duqm (11,9M+ $) sözleşmeleri. Tasfiyeden çıkarılarak %18 çekirdek hedef kilitlendi.",
+    full_content: `
+      <div class="space-y-4">
+        <p><strong>Yatırım Tezi:</strong> Şirket yurt içi yüksek faiz ve kredi daralmasından bağımsız, tamamen döviz bazlı küresel ağır taşımacılık ve rüzgar enerjisi santrali montajı yürütmektedir. Son dönemde Nordex (7,2M $) ve Umman Duqm RES (11,9M+ $) sözleşmelerini imzalamıştır.</p>
+        <div class="bg-emerald-950/20 border border-emerald-500/30 p-3 rounded-lg text-xs font-mono">
+          <strong>Atlas Kararı:</strong> İlk incelemedeki tasfiye kararı bozuldu; güçlü döviz nakit akışı ve ihracat gücü sebebiyle portföyde %18 payla (872 TL) çekirdeğe kilitlendi.
+        </div>
+      </div>
+    `
   },
   {
     ticker: "GENIL",
-    title: "Gen İlaç Azerbaycan Üssü & Incyte Küresel Lisansı",
+    title: "Gen İlaç: Incyte 5 Yıllık Lisansı & Net Nakit Bilanço",
     date: "2026-10-13",
-    verdict: "Kuvvetli Al (Net Nakit Bilanço)",
-    summary: "Borçsuz bilanço, Incyte 5 yıllık lisansı ve Kafkasya ihracat sıçraması ile 98.00 TL adil değer."
+    verdict: "Kuvvetli Al (Net Nakit Bilanço, 98.00 TL Hedef)",
+    summary: "Borçsuz bilanço, Incyte 5 yıllık lisansı ve Kafkasya ihracat sıçraması ile 98.00 TL adil değer.",
+    full_content: `
+      <div class="space-y-4">
+        <p><strong>Yatırım Tezi:</strong> Gen İlaç net nakit pozisyonunda borçsuz bir bilançoya sahiptir; bu sayede %50 politika faizi ortamında sıfır finansman gideri yükü taşır. Incyte ile Niktimvo ve Opzelura için 5 yıllık münhasır lisans imzalamış, Azerbaycan fabrikasıyla ihracat atağı başlatmıştır.</p>
+        <div class="bg-emerald-950/20 border border-emerald-500/30 p-3 rounded-lg text-xs font-mono">
+          <strong>Atlas Kararı:</strong> Defansif sağlık büyümesi omurgası olarak 442 TL'den 726 TL'ye (%15) büyütülecektir.
+        </div>
+      </div>
+    `
+  },
+  {
+    ticker: "SASA",
+    title: "Sasa Polyester: PTA Tesisi, Faiz Baskısı & Tasfiye Tezi",
+    date: "2026-10-13",
+    verdict: "Sat (Tasfiye) / Yüksek Borç & %700 Sermaye Sulanması",
+    summary: "Adana PTA tesisi devreye girdi ancak 52,5 Milyar TL'ye fırlayan sermaye sulanması ve yüksek finansman giderleri kârı tamamen baskılıyor.",
+    full_content: `
+      <div class="space-y-4">
+        <p><strong>Yatırım Tezi:</strong> Mart 2025'te 1,72 Milyar Dolarlık Adana PTA tesisi devreye alınmış olsa da, çıkarılmış sermaye bedelsiz ve tahsisli ihraçlarla 52,5 Milyar TL'ye fırlamıştır. Yüksek borç stoğu ve %50 faiz ortamında finansman giderleri faaliyet kârını yutmaktadır.</p>
+        <div class="bg-rose-950/30 border border-rose-500/30 p-3 rounded-lg text-xs font-mono">
+          <strong>Atlas Kararı:</strong> 467,50 TL'lik SASA pozisyonu tasfiye edilerek çekirdek havuza (AKBNK / ALTIN.S1) aktarılmalıdır.
+        </div>
+      </div>
+    `
+  },
+  {
+    ticker: "PEKGY",
+    title: "Peker GYO: Bedelli Sermaye Artırımı & Faiz Krizinden Çıkış",
+    date: "2026-10-13",
+    verdict: "Sat (Tasfiye) / Gayrimenkul Faiz Baskısı & Bedelli",
+    summary: "%100 bedelli sermaye artırımı ile toplanan fonun %45'i banka borcu kapatmaya ayrıldı. Faiz ortamında GYO sektörü baskı altında.",
+    full_content: `
+      <div class="space-y-4">
+        <p><strong>Yatırım Tezi:</strong> Peker GYO %100 bedelli sermaye artırımı yapmış, toplanan kaynağın yaklaşık %45'iyle yüksek faizli banka kredilerini kapatmıştır. %50 faiz ve sıkılaşma ortamında gayrimenkul satışları ve nakit akışı baskılanmaktadır.</p>
+        <div class="bg-rose-950/30 border border-rose-500/30 p-3 rounded-lg text-xs font-mono">
+          <strong>Atlas Kararı:</strong> 394,24 TL'lik pozisyon derhal nakde dönüştürülmeli ve PPF fonuna park edilmelidir.
+        </div>
+      </div>
+    `
+  },
+  {
+    ticker: "MANAS",
+    title: "Manas Enerji: Sayaç İhaleleri vs. %100 Bedelli Sermaye Baskısı",
+    date: "2026-10-13",
+    verdict: "Sat (Tasfiye) / Bedelli Süreci & Sığ Tahta Riski",
+    summary: "ASKİ ve İGDAŞ ihaleleri kazanılmış olsa da şirketin %100 bedelli sermaye artırımı süreci hisse üzerinde yoğun arz baskısı yaratmaktadır.",
+    full_content: `
+      <div class="space-y-4">
+        <p><strong>Yatırım Tezi:</strong> Şirket ASKİ (523M TL) ve İGDAŞ (114M TL) sayaç ihalelerini kazanmıştır; ancak sermaye ihtiyacı sebebiyle %100 bedelli sermaye artırımına gitmiştir. Sığ tahta volatilitesi ve yatırımcıdan nakit talep eden yapı küçük portföy için risklidir.</p>
+        <div class="bg-rose-950/30 border border-rose-500/30 p-3 rounded-lg text-xs font-mono">
+          <strong>Atlas Kararı:</strong> 437,10 TL'lik tutar tasfiye edilerek çekirdek büyüme şirketlerine aktarılmalıdır.
+        </div>
+      </div>
+    `
+  },
+  {
+    ticker: "INFO",
+    title: "İnfo Yatırım: BIST Hacim Daralması & Aracı Kurum Gelir Baskısı",
+    date: "2026-10-13",
+    verdict: "Sat (Tasfiye) / BIST Hacim Daralması",
+    summary: "Yüksek faiz sebebiyle mevduata kaçan fonlar BIST işlem hacimlerini ve komisyon gelirlerini düşürdü. Halka arz temposundaki yavaşlama kârı baskılıyor.",
+    full_content: `
+      <div class="space-y-4">
+        <p><strong>Yatırım Tezi:</strong> Aracı kurumların kârlılığı BIST günlük işlem hacmi ve halka arz gelirlerine doğrudan bağımlıdır. %50 faiz ortamında yatırımcıların para piyasası fonlarına yönelmesi aracı kurum gelirlerini zayıflatmıştır.</p>
+        <div class="bg-rose-950/30 border border-rose-500/30 p-3 rounded-lg text-xs font-mono">
+          <strong>Atlas Kararı:</strong> 467,04 TL'lik pozisyon tasfiye edilmeli, doğrudan %50 faiz neması sunan PPF'ye çekilmelidir.
+        </div>
+      </div>
+    `
+  },
+  {
+    ticker: "HDFGS",
+    title: "Hedef Girişim: Girişim Sermayesi İskontosu & Çıkış Tıkanıklığı",
+    date: "2026-10-13",
+    verdict: "Sat (Tasfiye) / Start-up Değerleme İskontosu",
+    summary: "Küresel ve yerel faiz artışları start-up değerlemelerini baskılamış, halka arz penceresinin daralması girişim sermayesi çıkışlarını (exit) zorlaştırmıştır.",
+    full_content: `
+      <div class="space-y-4">
+        <p><strong>Yatırım Tezi:</strong> Portföyündeki Seyitler Kimya (SEYKM) kısmi satışı ve Startup Burada Fonu yatırımları devam etse de, yüksek iskonto oranı ve sığ tahta yapısı sermaye verimliliğini düşürmektedir.</p>
+        <div class="bg-rose-950/30 border border-rose-500/30 p-3 rounded-lg text-xs font-mono">
+          <strong>Atlas Kararı:</strong> 550,40 TL'lik tutar tasfiye edilerek yüksek temettülü AKBNK omurgasına eklenmelidir.
+        </div>
+      </div>
+    `
+  },
+  {
+    ticker: "THYAO",
+    title: "Türk Hava Yolları: Temel Göstergeler & Deterministik DCF Değerleme",
+    date: "2026-10-13",
+    verdict: "Kuvvetli Al (%23.5 Güvenlik Marjı, 388.50 TL Hedef)",
+    summary: "F/K 4.82x çarpanı, dövizli gelir kalkanı, Turkish Cargo büyümesi ve İstanbul Havalimanı küresel transfer merkezi gücü.",
+    full_content: `
+      <div class="space-y-4">
+        <p><strong>Yatırım Tezi:</strong> THYAO gelirlerinin %85'ten fazlası döviz (Euro/Dolar) cinsindendir. Gelişmekte olan piyasa emsallerine göre F/K 4.82x ile derin iskontoludur. Turkish Cargo'nun e-ticaret lojistiği çift haneli büyümektedir.</p>
+        <div class="bg-emerald-950/20 border border-emerald-500/30 p-3 rounded-lg text-xs font-mono">
+          <strong>Atlas Kararı:</strong> BIST 30 lokomotifi olarak 388.50 TL hedef değerle kuvvetli al statüsündedir.
+        </div>
+      </div>
+    `
   },
   {
     ticker: "ASELS",
-    title: "Aselsan Savunma Sanayii & 11+ Mr $ Bakiye Sipariş Analizi",
+    title: "Aselsan Elektronik: Savunma Sanayii & 11+ Mr $ Bakiye Sipariş",
     date: "2026-10-13",
-    verdict: "Al / Defansif Büyüme",
-    summary: "11+ Milyar Dolar bakiye sipariş portföyü, KAAN ve Siper projeleri ile 78.20 TL adil değer."
+    verdict: "Al / Defansif Büyüme (78.20 TL Hedef)",
+    summary: "11+ Milyar Dolar bakiye sipariş portföyü, KAAN, Siper ve Hisar projeleri ile güçlü bütçe görünürlüğü.",
+    full_content: `
+      <div class="space-y-4">
+        <p><strong>Yatırım Tezi:</strong> Aselsan, Türkiye savunma sanayiinin teknoloji omurgasıdır. 11 Milyar Doları aşan bakiye sipariş portföyü (backlog) önümüzdeki 4-5 yılın gelirini garanti altına almaktadır.</p>
+        <div class="bg-blue-950/30 border border-blue-500/30 p-3 rounded-lg text-xs font-mono">
+          <strong>Atlas Kararı:</strong> Uzun vadeli defansif büyüme sepeti için 78.20 TL hedef değerle alım listesindedir.
+        </div>
+      </div>
+    `
   }
 ];
 
@@ -1083,15 +1245,9 @@ function renderReports(reports) {
       </div>
       <div class="pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono">
         <span class="text-slate-400">Karar: <strong class="text-emerald-400">${rep.verdict}</strong></span>
-        ${rep.ticker !== "PORTFOY" ? `
-          <button onclick="loadTicker('${rep.ticker}')" class="text-blue-400 hover:text-blue-300 font-bold text-[11px] flex items-center gap-1">
-            İncele →
-          </button>
-        ` : `
-          <button onclick="document.getElementById('tab-btn-portfolio').click()" class="text-amber-400 hover:text-amber-300 font-bold text-[11px] flex items-center gap-1">
-            Görüntüle →
-          </button>
-        `}
+        <button onclick="openReportModal('${rep.ticker}')" class="px-2.5 py-1 bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white rounded border border-blue-500/30 font-bold text-[11px] transition flex items-center gap-1">
+          📖 Raporu Oku →
+        </button>
       </div>
     `;
     listEl.appendChild(card);
@@ -1099,9 +1255,86 @@ function renderReports(reports) {
 }
 
 /**
+ * 6.1. Detaylı Analiz & Rapor Okuma Modalı Mantığı
+ */
+function openReportModal(ticker) {
+  const modal = document.getElementById("report-modal");
+  if (!modal) return;
+
+  const rep = STATIC_REPORTS.find((r) => r.ticker === ticker) || {
+    ticker: ticker,
+    title: `${ticker} Temel & Stratejik Değerleme Raporu`,
+    verdict: "İnceleniyor",
+    summary: `${ticker} kodlu varlık için analiz dökümü.`,
+    full_content: `<p class="text-slate-300">${ticker} için detaylı analitik görünüm. Grafik ve finansal rasyolar ana panelde güncellenmiştir.</p>`
+  };
+
+  document.getElementById("modal-ticker-badge").textContent = rep.ticker;
+  document.getElementById("modal-title").textContent = rep.title;
+  document.getElementById("modal-verdict").textContent = `Karar: ${rep.verdict}`;
+
+  const bodyEl = document.getElementById("modal-body");
+  bodyEl.innerHTML = `
+    <div class="space-y-4">
+      <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800">
+        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Yönetici Özeti</h4>
+        <p class="text-slate-200 text-xs leading-relaxed">${rep.summary}</p>
+      </div>
+      <div class="border-t border-slate-800/80 pt-3">
+        ${rep.full_content || ""}
+      </div>
+    </div>
+  `;
+
+  const chartBtn = document.getElementById("modal-load-chart-btn");
+  if (chartBtn) {
+    if (rep.ticker !== "PORTFOY") {
+      chartBtn.style.display = "flex";
+      chartBtn.onclick = () => {
+        closeReportModal();
+        loadTicker(rep.ticker);
+      };
+    } else {
+      chartBtn.style.display = "flex";
+      chartBtn.innerHTML = "<span>🥧</span> Portföy Sekmesine Git";
+      chartBtn.onclick = () => {
+        closeReportModal();
+        const tabPort = document.getElementById("tab-btn-portfolio");
+        if (tabPort) tabPort.click();
+      };
+    }
+  }
+
+  modal.classList.remove("hidden");
+  modal.classList.add("flex");
+}
+
+function closeReportModal() {
+  const modal = document.getElementById("report-modal");
+  if (!modal) return;
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+
+/**
  * 7. Dinleyiciler ve Sekme Yönetimi
  */
 function setupEventListeners() {
+  // Modal Kapatma Dinleyicileri
+  const closeBtn = document.getElementById("modal-close-btn");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeReportModal);
+  }
+  const modal = document.getElementById("report-modal");
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeReportModal();
+    });
+  }
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeReportModal();
+  });
+
   // Popüler Çip Butonları
   document.querySelectorAll(".chip-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -1218,17 +1451,22 @@ async function loadDynamicData() {
     }
 
     // Portföy toplam değerini güncelle
+    const totalVal = dynamicData.portfolio.total_value;
     const totalValEl = document.getElementById("portfolio-total-value");
-    if (totalValEl && dynamicData.portfolio.total_value) {
-      totalValEl.textContent = formatCurrency(dynamicData.portfolio.total_value) + " TL";
+    if (totalValEl && totalVal) {
+      totalValEl.textContent = formatCurrency(totalVal) + " TL";
+    }
+    const headerPortEl = document.getElementById("header-portfolio-val");
+    if (headerPortEl && totalVal) {
+      headerPortEl.textContent = formatCurrency(totalVal) + " ₺";
     }
 
     // UI bileşenlerini yeniden render et
     if (document.getElementById("portfolio-table-body") && typeof renderPortfolio === "function") {
       renderPortfolio();
     }
-    if (FALLBACK_DATA && FALLBACK_DATA[currentTicker] && typeof renderKPIs === "function") {
-      renderKPIs(FALLBACK_DATA[currentTicker]);
+    if (FALLBACK_DATA && FALLBACK_DATA[currentTicker] && typeof renderDashboard === "function") {
+      renderDashboard(FALLBACK_DATA[currentTicker]);
     }
 
     // Üst bara son güncelleme rozeti ekle
@@ -1237,8 +1475,8 @@ async function loadDynamicData() {
       const dt = new Date(dynamicData.updated_at);
       const timeStr = dt.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
       const badge = document.createElement("span");
-      badge.className = "text-[10px] text-emerald-400 font-mono ml-2 border border-emerald-500/30 px-1.5 py-0.5 rounded";
-      badge.textContent = `⚡ Veri: ${timeStr} (Otomatik)`;
+      badge.className = "text-[9px] text-emerald-400 font-mono ml-1.5 border border-emerald-500/30 px-1 py-0.2 rounded hidden sm:inline";
+      badge.textContent = `⚡ ${timeStr}`;
       marketStatus.appendChild(badge);
     }
   } catch (e) {
