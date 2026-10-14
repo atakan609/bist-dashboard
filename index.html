@@ -57,74 +57,106 @@
 </head>
 <body class="bg-[#0b1120] text-slate-100 font-sans min-h-screen antialiased selection:bg-blue-600 selection:text-white">
 
-  <!-- Üst Gezinme ve Makro Bant (Ultra-Kompakt Tek Satır) -->
-  <header class="border-b border-slate-800/80 bg-[#0f172a]/95 backdrop-blur sticky top-0 z-50 py-1.5 px-3 sm:px-5">
-    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+  <!-- Üst Gezinme ve Makro Bant (2 Katmanlı Ferah & Canlı Tasarım) -->
+  <header class="border-b border-slate-800/80 bg-[#0f172a]/95 backdrop-blur sticky top-0 z-50 px-3 sm:px-6">
+    <div class="max-w-7xl mx-auto divide-y divide-slate-800/60">
       
-      <!-- Sol: Kompakt Marka / Kimlik -->
-      <div class="flex items-center gap-2 shrink-0">
-        <div class="w-7 h-7 rounded-md bg-gradient-to-tr from-blue-600 via-indigo-600 to-emerald-500 flex items-center justify-center font-mono font-bold text-sm text-white shadow-sm shadow-blue-500/30">
-          ₺
+      <!-- Katman 1: Marka, Canlı Saat, Makro Özet, Realtime Durumu & Portföy Masası -->
+      <div class="py-2.5 flex items-center justify-between gap-4">
+        
+        <!-- Sol: Marka ve Canlı Borsa Saati -->
+        <div class="flex items-center gap-3 shrink-0">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 via-indigo-600 to-emerald-500 flex items-center justify-center font-mono font-bold text-base text-white shadow-md shadow-blue-500/20">
+              ₺
+            </div>
+            <div class="flex flex-col">
+              <div class="flex items-center gap-1.5 leading-none">
+                <span class="font-bold text-sm tracking-tight text-white">AtakanOS</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/20">BIST v2</span>
+              </div>
+              <span class="text-[10px] text-slate-400 font-sans tracking-wide mt-0.5">Market & Portfolio Intelligence</span>
+            </div>
+          </div>
+
+          <!-- Canlı Dijital Borsa Saati (Her Saniye Akışta) -->
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300 shadow-inner">
+            <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping opacity-75"></span>
+            <span class="text-slate-500 text-[10px] font-bold">İST:</span>
+            <span id="live-clock" class="text-blue-400 font-bold tracking-wider">--:--:--</span>
+          </div>
         </div>
-        <div class="flex items-center gap-1.5">
-          <span class="font-bold text-sm tracking-tight text-white">AtakanOS</span>
-          <span class="text-[10px] px-1.5 py-0.2 rounded bg-blue-500/10 text-blue-400 font-mono border border-blue-500/20 hidden sm:inline">BIST v2</span>
+
+        <!-- Sağ: Portföy Değeri, Makro Göstergeler, Canlı WS Rozeti & Portföy Masası -->
+        <div class="flex items-center gap-2.5 sm:gap-3 text-xs font-mono shrink-0">
+          
+          <!-- Canlı Portföy Özeti -->
+          <div class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-slate-300 shadow-sm">
+            <span class="text-slate-500 text-[11px]">Portföy:</span>
+            <span id="header-portfolio-val" class="font-bold text-emerald-400 text-xs sm:text-sm">4.580,19 ₺</span>
+          </div>
+
+          <!-- Makro Kurlar -->
+          <div class="hidden md:flex items-center gap-2.5 px-2.5 py-1 rounded-lg bg-slate-900/50 border border-slate-800/80 text-slate-300">
+            <div class="flex items-center gap-1">
+              <span class="text-slate-500 text-[10px]">USD:</span>
+              <span id="macro-usd" class="font-bold text-amber-400">34.25</span>
+            </div>
+            <span class="text-slate-700">|</span>
+            <div class="flex items-center gap-1">
+              <span class="text-slate-500 text-[10px]">BIST100:</span>
+              <span id="macro-xu100" class="font-bold text-emerald-400">9.285</span>
+            </div>
+          </div>
+
+          <!-- Supabase Realtime WebSocket Rozeti -->
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800" id="market-status" title="Supabase WebSocket Realtime Bağlantısı">
+            <span id="realtime-status-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="realtime-status-label" class="text-[11px] text-emerald-400 font-mono font-medium">Canlı (WS)</span>
+          </div>
+
+          <!-- İnteraktif Portföy Masası Butonu -->
+          <button id="open-sandbox-btn" class="px-3 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/30 font-bold text-xs font-mono transition flex items-center gap-1.5 shadow-sm active:scale-95">
+            <span>⚙️</span> <span class="hidden sm:inline">Portföy Masası</span>
+          </button>
         </div>
+
       </div>
 
-      <!-- Orta: Kompakt Yatay Çip Kaydırıcı & Arama -->
-      <div class="flex items-center gap-2 overflow-hidden flex-1 justify-center max-w-3xl">
-        <div class="flex items-center gap-1 overflow-x-auto whitespace-nowrap scrollbar-none py-0.5 max-w-full text-[11px] font-mono">
-          <span class="text-[9px] text-amber-400 font-bold uppercase tracking-wider pl-1 shrink-0">Portföy:</span>
-          <button data-ticker="ALTIN.S1" class="chip-btn px-1.5 py-0.5 rounded bg-slate-800 text-amber-300 border border-amber-500/30 font-medium hover:bg-slate-700 text-[10px] shrink-0">ALTIN.S1</button>
-          <button data-ticker="AKBNK" class="chip-btn px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 text-[10px] shrink-0">AKBNK</button>
-          <button data-ticker="HRKET" class="chip-btn px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 text-[10px] shrink-0">HRKET</button>
-          <button data-ticker="GENIL" class="chip-btn px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 text-[10px] shrink-0">GENIL</button>
-          <button data-ticker="PPZ" class="chip-btn px-1.5 py-0.5 rounded bg-slate-800 text-purple-300 border border-purple-500/30 font-medium hover:bg-slate-700 text-[10px] shrink-0">PPZ (FON)</button>
+      <!-- Katman 2: Rahat İzleme Listesi (Watchlist Çipleri) & Arama Çubuğu -->
+      <div class="py-2 flex items-center justify-between gap-4 overflow-hidden">
+        
+        <!-- Sol: Ferah Yatay Kaydırılabilir Çip Listesi -->
+        <div class="flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none py-0.5 text-xs font-mono flex-1">
+          <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider pl-1 shrink-0">Portföy:</span>
+          <button data-ticker="ALTIN.S1" class="chip-btn px-2.5 py-1 rounded-md bg-slate-800 text-amber-300 border border-amber-500/30 font-medium hover:bg-slate-700 hover:border-amber-400 text-xs shrink-0 transition">ALTIN.S1</button>
+          <button data-ticker="AKBNK" class="chip-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 hover:text-white text-xs shrink-0 transition">AKBNK</button>
+          <button data-ticker="HRKET" class="chip-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 hover:text-white text-xs shrink-0 transition">HRKET</button>
+          <button data-ticker="GENIL" class="chip-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 hover:text-white text-xs shrink-0 transition">GENIL</button>
+          <button data-ticker="PPZ" class="chip-btn px-2.5 py-1 rounded-md bg-slate-800 text-purple-300 border border-purple-500/30 font-medium hover:bg-slate-700 hover:text-white text-xs shrink-0 transition">PPZ (FON)</button>
           
-          <span class="text-slate-600 px-0.5 shrink-0">|</span>
-          <span class="text-[9px] text-blue-400 font-bold uppercase tracking-wider shrink-0">BIST 30:</span>
-          <button data-ticker="THYAO" class="chip-btn px-1.5 py-0.5 rounded bg-blue-600 text-white font-medium hover:bg-blue-500 text-[10px] shrink-0">THYAO</button>
-          <button data-ticker="ASELS" class="chip-btn px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 text-[10px] shrink-0">ASELS</button>
-          <button data-ticker="TUPRS" class="chip-btn px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 text-[10px] shrink-0">TUPRS</button>
-          <button data-ticker="BIMAS" class="chip-btn px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 text-[10px] shrink-0">BIMAS</button>
-          <button data-ticker="KCHOL" class="chip-btn px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 text-[10px] shrink-0">KCHOL</button>
+          <span class="text-slate-700 px-1 shrink-0">|</span>
+          <span class="text-[10px] text-blue-400 font-bold uppercase tracking-wider shrink-0">BIST 30:</span>
+          <button data-ticker="THYAO" class="chip-btn px-2.5 py-1 rounded-md bg-blue-600 text-white font-medium hover:bg-blue-500 text-xs shrink-0 transition shadow-sm">THYAO</button>
+          <button data-ticker="ASELS" class="chip-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 hover:text-white text-xs shrink-0 transition">ASELS</button>
+          <button data-ticker="TUPRS" class="chip-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 hover:text-white text-xs shrink-0 transition">TUPRS</button>
+          <button data-ticker="BIMAS" class="chip-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 hover:text-white text-xs shrink-0 transition">BIMAS</button>
+          <button data-ticker="KCHOL" class="chip-btn px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 font-medium hover:bg-slate-700 hover:text-white text-xs shrink-0 transition">KCHOL</button>
         </div>
 
+        <!-- Sağ: Temiz & Genişletilmiş Arama Çubuğu -->
         <form id="search-form" class="relative flex items-center shrink-0">
           <input 
             type="text" 
             id="ticker-input" 
-            placeholder="KOD..." 
-            class="w-16 sm:w-20 bg-slate-900 border border-slate-700 text-white text-[11px] rounded px-1.5 py-0.5 uppercase font-mono tracking-wider focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+            placeholder="HİSSE KODU..." 
+            class="w-28 sm:w-36 bg-slate-900 border border-slate-700 text-white text-xs rounded-lg px-2.5 py-1 uppercase font-mono tracking-wider focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition placeholder:text-slate-500"
           />
-          <button type="submit" class="absolute right-0.5 text-slate-400 hover:text-white p-0.5">
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <button type="submit" class="absolute right-1 text-slate-400 hover:text-white p-1" title="Ara">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
           </button>
         </form>
-      </div>
 
-      <!-- Sağ: Mikro Makro Şerit, Portföy Masası & Canlı Rozeti -->
-      <div class="flex items-center gap-2 text-[11px] font-mono shrink-0">
-        <button id="open-sandbox-btn" class="px-2.5 py-1 rounded-lg bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/30 font-bold text-xs transition flex items-center gap-1 shadow-sm">
-          <span>⚙️</span> <span class="hidden sm:inline">Portföy Masası</span>
-        </button>
-        <div class="hidden lg:flex items-center gap-1.5 text-slate-300">
-          <span class="text-slate-500">Portföy:</span>
-          <span id="header-portfolio-val" class="font-bold text-emerald-400">4.580 ₺</span>
-        </div>
-        <div class="hidden md:flex items-center gap-1 text-slate-300">
-          <span class="text-slate-500">USD:</span>
-          <span id="macro-usd" class="font-bold text-amber-400">34.25</span>
-        </div>
-        <div class="hidden xl:flex items-center gap-1 text-slate-300">
-          <span class="text-slate-500">BIST100:</span>
-          <span id="macro-xu100" class="font-bold text-emerald-400">9.285</span>
-        </div>
-        <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800" id="market-status">
-          <span id="realtime-status-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span id="realtime-status-label" class="text-[9px] text-emerald-400 font-mono">Realtime</span>
-        </div>
       </div>
 
     </div>

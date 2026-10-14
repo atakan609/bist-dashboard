@@ -9,9 +9,27 @@
 let tvChart = null;
 let candleSeries = null;
 let volumeSeries = null;
+let activeCandleData = [];
+let activeVolumeData = [];
 let currentPortfolioDoughnut = null;
 let targetPortfolioDoughnut = null;
 let currentTicker = "THYAO";
+
+/**
+ * Canlı Dijital Borsa Saati (İstanbul / TR)
+ * Her saniye (#live-clock) elementini saniyesi saniyesine canlı günceller
+ */
+function startLiveClock() {
+  const clockEl = document.getElementById("live-clock");
+  function tick() {
+    const now = new Date();
+    if (clockEl) {
+      clockEl.textContent = now.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    }
+  }
+  tick();
+  setInterval(tick, 1000);
+}
 
 // Supabase Realtime Yapılandırması (BIST Analyze Projesi)
 const SUPABASE_CONFIG = {
@@ -780,6 +798,12 @@ const STATIC_REPORTS = [
  */
 document.addEventListener("DOMContentLoaded", async () => {
   try {
+    startLiveClock();
+  } catch (e) {
+    console.error("Canlı saat başlatma hatası:", e);
+  }
+
+  try {
     initTradingViewChart();
   } catch (e) {
     console.error("TradingView grafik başlatma hatası:", e);
@@ -1192,6 +1216,8 @@ function renderDashboard(data) {
       volumeData = fb.volumes;
     }
 
+    activeCandleData = candleData;
+    activeVolumeData = volumeData;
     candleSeries.setData(candleData);
     volumeSeries.setData(volumeData);
 
@@ -1825,6 +1851,53 @@ function handleRealtimeQuoteUpdate(newQuote) {
       const pct = Math.max(5, Math.min(95, ((price - low) / (high - low || 1)) * 100));
       const bar = document.getElementById("day-range-bar");
       if (bar) bar.style.width = `${pct}%`;
+    }
+
+    // TradingView Hafif Grafik Canlı Mum Tick Beslemesi
+    if (candleSeries && activeCandleData && activeCandleData.length > 0) {
+      const lastCandle = activeCandleData[activeCandleData.length - 1];
+      const updatedCandle = {
+        time: lastCandle.time,
+        open: lastCandle.open,
+        high: Math.max(lastCandle.high, price),
+        low: Math.min(lastCandle.low, price),
+        close: price
+      };
+      activeCandleData[activeCandleData.length - 1] = updatedCandle;
+      try {
+        candleSeries.update(updatedCandle);
+      } catch (err) {
+        console.warn("Mum canlı güncelleme hatası:", err);
+      }
+
+      // Lejant değerlerini anlık tick ile senkronize et
+      const oEl = document.getElementById("legend-open");
+      const hEl = document.getElementById("legend-high");
+      const lEl = document.getElementById("legend-low");
+      const kEl = document.getElementById("legend-close");
+      if (oEl) oEl.textContent = formatCurrency(updatedCandle.open);
+      if (hEl) hEl.textContent = formatCurrency(updatedCandle.high);
+      if (lEl) lEl.textContent = formatCurrency(updatedCandle.low);
+      if (kEl) kEl.textContent = formatCurrency(updatedCandle.close);
+    }
+
+    if (volumeSeries && activeVolumeData && activeVolumeData.length > 0 && newQuote.volume) {
+      const lastVol = activeVolumeData[activeVolumeData.length - 1];
+      const newVol = parseInt(newQuote.volume);
+      if (newVol > 0) {
+        const lastCandle = activeCandleData[activeCandleData.length - 1];
+        const updatedVol = {
+          time: lastVol.time,
+          value: newVol,
+          color: lastCandle && price >= lastCandle.open ? "rgba(16, 185, 129, 0.4)" : "rgba(239, 68, 68, 0.4)"
+        };
+        activeVolumeData[activeVolumeData.length - 1] = updatedVol;
+        try {
+          volumeSeries.update(updatedVol);
+        } catch (_) {}
+        const volEl = document.getElementById("legend-vol");
+        if (volEl) volEl.textContent = formatCompact(newVol);
+      }
     }
   }
 
