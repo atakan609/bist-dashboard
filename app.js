@@ -281,25 +281,25 @@ const FALLBACK_DATA = {
     ticker: "ALTIN.S1",
     name: "Darphane Altın Sertifikası (BIST)",
     sector: "Emtia & Koruma",
-    price: 34.15,
+    price: 71.05,
     change: 0.45,
-    change_percent: 1.33,
+    change_percent: 0.64,
     currency: "TRY",
-    day_low: 33.70,
-    day_high: 34.35,
+    day_low: 70.80,
+    day_high: 71.60,
     volume: 18500000,
     market_cap: 85000000000,
     pe_ratio: null,
     pb_ratio: null,
     ev_ebitda: null,
     dividend_yield: 0.0,
-    dcf_fair_value: 36.80,
-    margin_of_safety: 7.76,
+    dcf_fair_value: 78.50,
+    margin_of_safety: 10.49,
     wacc: 0.300,
     verdict: "Tut / Enflasyon Kalkanı (%30 Hedef Ağırlık, Makas Kontrolü)",
     bull_thesis: [
       "Borsa İstanbul nezdinde stopajsız (%0) ve saklama maliyetsiz fiziki külçe altına dönüşüm hakkı.",
-      "Enflasyon ve kur şoklarına karşı portföyün en güçlü savunma çıpası (1.001 TL -> 1.452 TL hedef).",
+      "Enflasyon ve kur şoklarına karşı portföyün en güçlü savunma çıpası (1.421 TL gerçekleşen | %31).",
       "Küresel faiz indirim döngüsünde ons altın ve jeopolitik risk priminden doğrudan faydalanma."
     ],
     bear_thesis: [
@@ -311,27 +311,27 @@ const FALLBACK_DATA = {
     ticker: "AKBNK",
     name: "Akbank T.A.Ş.",
     sector: "Bankacılık (BIST 30)",
-    price: 54.20,
+    price: 67.85,
     change: 1.40,
-    change_percent: 2.65,
+    change_percent: 2.11,
     currency: "TRY",
-    day_low: 52.80,
-    day_high: 54.90,
+    day_low: 67.20,
+    day_high: 68.90,
     volume: 42100000,
-    market_cap: 281840000000,
-    pe_ratio: 4.10,
-    pb_ratio: 0.92,
-    ev_ebitda: 3.80,
+    market_cap: 352820000000,
+    pe_ratio: 4.60,
+    pb_ratio: 1.05,
+    ev_ebitda: 4.10,
     dividend_yield: 4.50,
-    dcf_fair_value: 72.00,
-    margin_of_safety: 32.84,
+    dcf_fair_value: 86.00,
+    margin_of_safety: 26.75,
     wacc: 0.380,
     verdict: "Kuvvetli Al / 11,45 Mr TL Temettü & %19,26 SYR (%25 Hedef)",
     bull_thesis: [
       "Sektör lideri Sermaye Yeterlilik Rasyosu (%19,26 SYR) ve rekor 11,45 Milyar TL nakit temettü.",
       "Dezenflasyon sürecinde mevduat maliyetlerinin gevşemesiyle Net Faiz Marjında (NIM) +%2,5 toparlanma.",
-      "F/K 4.10x ve PD/DD 0.92x çarpanlarıyla gelişmekte olan piyasaların en ucuz bankalarından biri.",
-      "Atlas 4+1 Modelinde +730 TL ilave alım ile 1.210 TL (%25) çekirdek omurga hedefi."
+      "F/K 4.60x ve PD/DD 1.05x çarpanlarıyla gelişmekte olan piyasaların en ucuz bankalarından biri.",
+      "Atlas 4+1 Modelinde 1.289 TL (%28,1) pozisyon ile ana omurga lokomotifi."
     ],
     bear_thesis: [
       "Sıkı para politikasında yüksek TL mevduat maliyetlerinin kısa vadeli marj baskısı.",
@@ -343,27 +343,27 @@ const FALLBACK_DATA = {
     ticker: "HRKET",
     name: "Hareket Proje Taşımacılığı ve Yük Mühendisliği",
     sector: "Sanayi & Proje Lojistiği",
-    price: 71.30,
-    change: 2.10,
-    change_percent: 3.03,
+    price: 10.10,
+    change: 0.22,
+    change_percent: 2.23,
     currency: "TRY",
-    day_low: 69.50,
-    day_high: 72.80,
+    day_low: 9.95,
+    day_high: 10.35,
     volume: 6850000,
     market_cap: 11408000000,
     pe_ratio: 8.90,
     pb_ratio: 2.15,
     ev_ebitda: 7.20,
     dividend_yield: 1.20,
-    dcf_fair_value: 94.50,
-    margin_of_safety: 32.54,
+    dcf_fair_value: 13.80,
+    margin_of_safety: 36.63,
     wacc: 0.355,
     verdict: "Kuvvetli Al / Dövizli RES Lojistiği & Küresel Backlog (%18 Hedef)",
     bull_thesis: [
       "Nordex (7,2M $) ve Umman Duqm RES (11,9M+ $) sözleşmeleriyle güçlü döviz nakit akışı.",
       "Yurt içi kredi daralmasından bağımsız küresel ağır nakliyat ve rüzgar enerjisi santrali montaj pazarı.",
       "Hareket Rüzgar Enerji iştirakiyle yenilenebilir enerji montajında uzmanlaşma.",
-      "Atlas kararıyla tasfiye havuzundan çıkarılarak %18 hedef ağırlıkla (872 TL) çekirdeğe kilitlendi."
+      "Atlas kararıyla 828 TL (%18,1) ile 4+1 modelin 3. büyük büyüme ayağı."
     ],
     bear_thesis: [
       "Küresel proje ertelemeleri ve rüzgar türbini tedarik zinciri aksamaları.",
@@ -374,20 +374,20 @@ const FALLBACK_DATA = {
     ticker: "GENIL",
     name: "Gen İlaç ve Sağlık Ürünleri",
     sector: "İlaç & Biyoteknoloji",
-    price: 73.80,
-    change: 1.30,
-    change_percent: 1.79,
+    price: 5.04,
+    change: 0.08,
+    change_percent: 1.61,
     currency: "TRY",
-    day_low: 72.20,
-    day_high: 74.90,
+    day_low: 4.95,
+    day_high: 5.15,
     volume: 5120000,
     market_cap: 22140000000,
     pe_ratio: 9.40,
     pb_ratio: 1.95,
     ev_ebitda: 7.80,
     dividend_yield: 2.10,
-    dcf_fair_value: 98.00,
-    margin_of_safety: 32.79,
+    dcf_fair_value: 6.85,
+    margin_of_safety: 35.91,
     wacc: 0.340,
     verdict: "Kuvvetli Al / Net Nakit Bilanço & Incyte Lisans Katalizörü (%15 Hedef)",
     bull_thesis: [
@@ -940,28 +940,38 @@ function initTradingViewChart() {
 
 /**
  * Sentetik Kandil Geçmişi Üretici (TradingView Görseli için)
+ * Ticker koduna göre deterministik seed oluşturarak her hissede benzersiz dalga formu üretir.
  */
-function generateFallbackCandles(basePrice, count = 90) {
+function generateFallbackCandles(basePrice, ticker = "THYAO", count = 90) {
   const candles = [];
   const volumes = [];
-  let price = basePrice * 0.78;
+  let hash = 0;
+  for (let j = 0; j < ticker.length; j++) {
+    hash = (hash << 5) - hash + ticker.charCodeAt(j);
+  }
+  const freq1 = 0.15 + (Math.abs(hash % 100) / 100) * 0.15;
+  const freq2 = 0.35 + (Math.abs((hash >> 3) % 100) / 100) * 0.2;
+  const amp1 = 0.012 + (Math.abs((hash >> 6) % 100) / 100) * 0.015;
+  const amp2 = 0.010 + (Math.abs((hash >> 9) % 100) / 100) * 0.012;
+  const trend = ((hash % 10) - 4) * 0.0008;
+
+  let price = basePrice * (0.8 + ((Math.abs(hash) % 20) / 100));
   const now = new Date();
-  
+
   for (let i = count; i >= 0; i--) {
     const d = new Date();
     d.setDate(now.getDate() - i);
     if (d.getDay() === 0 || d.getDay() === 6) continue;
 
     const timeStr = d.toISOString().split("T")[0];
-    const wave = Math.sin(i * 0.22) * 0.018 + Math.cos(i * 0.45) * 0.015;
-    const trend = 0.0035;
+    const wave = Math.sin(i * freq1) * amp1 + Math.cos(i * freq2) * amp2;
     const delta = wave + trend;
 
     const open = price;
     const close = open * (1.0 + delta);
     const high = Math.max(open, close) * (1.0 + Math.abs(Math.sin(i * 0.8)) * 0.012);
     const low = Math.min(open, close) * (1.0 - Math.abs(Math.cos(i * 0.6)) * 0.011);
-    const vol = Math.floor(18000000 * (0.6 + Math.abs(Math.sin(i * 0.3)) * 0.8));
+    const vol = Math.floor(15000000 * (0.5 + Math.abs(Math.sin(i * freq1)) * 0.8));
 
     candles.push({
       time: timeStr,
@@ -1015,7 +1025,34 @@ async function loadTicker(tickerSymbol) {
   // Statik Kalkan Verisini Al
   let finalData = FALLBACK_DATA[ticker];
 
-  // Eğer listede yoksa jenerik fallback oluştur
+  // Eğer window.TICKER_DATA varsa dinamik veriyi harmanla
+  const dynamicItem = window.TICKER_DATA?.[ticker];
+  if (dynamicItem) {
+    if (!finalData) {
+      finalData = {
+        ticker: ticker,
+        name: dynamicItem.name || ticker,
+        sector: dynamicItem.sector || "BIST Şirketi",
+        price: dynamicItem.price,
+        change_percent: dynamicItem.change_pct,
+        currency: "TRY"
+      };
+    } else {
+      finalData = {
+        ...finalData,
+        price: dynamicItem.price !== undefined ? dynamicItem.price : finalData.price,
+        change_percent: dynamicItem.change_pct !== undefined ? dynamicItem.change_pct : finalData.change_percent,
+        market_cap: dynamicItem.market_cap || finalData.market_cap,
+        pe_ratio: dynamicItem.pe_ratio || finalData.pe_ratio,
+        pb_ratio: dynamicItem.pb_ratio || finalData.pb_ratio,
+        day_low: dynamicItem.day_low || finalData.day_low,
+        day_high: dynamicItem.day_high || finalData.day_high,
+        volume: dynamicItem.volume || finalData.volume
+      };
+    }
+  }
+
+  // Eğer hala veri yoksa jenerik fallback oluştur
   if (!finalData) {
     finalData = {
       ticker: ticker,
@@ -1042,18 +1079,7 @@ async function loadTicker(tickerSymbol) {
     };
   }
 
-  // Eğer arka planda yerel bir API varsa sessizce dene (GitHub Pages'de hata fırlatmaz)
-  try {
-    const qResp = await fetch(`/api/quote?ticker=${ticker}`);
-    if (qResp.ok) {
-      const qJson = await qResp.json();
-      finalData = { ...finalData, ...qJson };
-    }
-  } catch (_) {
-    // Statik kalkan devrede
-  }
-
-  // Dashboard'u Çiz
+  // Dashboard'u Çiz (Senkron & Gecikmesiz)
   renderDashboard(finalData);
 }
 
@@ -1125,15 +1151,47 @@ function renderDashboard(data) {
 
   // Grafik Verisini Güncelle
   if (candleSeries && volumeSeries) {
-    const fbCandles = generateFallbackCandles(data.price);
-    candleSeries.setData(fbCandles.candles);
-    volumeSeries.setData(fbCandles.volumes);
-    const last = fbCandles.candles[fbCandles.candles.length - 1];
-    document.getElementById("legend-open").textContent = formatCurrency(last.open);
-    document.getElementById("legend-high").textContent = formatCurrency(last.high);
-    document.getElementById("legend-low").textContent = formatCurrency(last.low);
-    document.getElementById("legend-close").textContent = formatCurrency(last.close);
-    document.getElementById("legend-vol").textContent = formatCompact(last.volume);
+    let candleData = [];
+    let volumeData = [];
+
+    // Gerçek yfinance verisi var mı kontrol et
+    const dynamicCandles = window.DYNAMIC_DATA?.candles?.[data.ticker];
+    if (dynamicCandles && dynamicCandles.length > 0) {
+      candleData = dynamicCandles.map((c) => ({
+        time: c.time,
+        open: c.open,
+        high: c.high,
+        low: c.low,
+        close: c.close
+      }));
+      volumeData = dynamicCandles.map((c) => ({
+        time: c.time,
+        value: c.volume,
+        color: c.close >= c.open ? "rgba(16, 185, 129, 0.4)" : "rgba(239, 68, 68, 0.4)"
+      }));
+    } else {
+      const fb = generateFallbackCandles(data.price, data.ticker);
+      candleData = fb.candles;
+      volumeData = fb.volumes;
+    }
+
+    candleSeries.setData(candleData);
+    volumeSeries.setData(volumeData);
+
+    if (candleData.length > 0) {
+      const last = candleData[candleData.length - 1];
+      const lastVol = volumeData[volumeData.length - 1];
+      const oEl = document.getElementById("legend-open");
+      const hEl = document.getElementById("legend-high");
+      const lEl = document.getElementById("legend-low");
+      const kEl = document.getElementById("legend-close");
+      const volEl = document.getElementById("legend-vol");
+      if (oEl) oEl.textContent = formatCurrency(last.open);
+      if (hEl) hEl.textContent = formatCurrency(last.high);
+      if (lEl) lEl.textContent = formatCurrency(last.low);
+      if (kEl) kEl.textContent = formatCurrency(last.close);
+      if (volEl && lastVol) volEl.textContent = formatCompact(lastVol.value);
+    }
     tvChart.timeScale().fitContent();
   }
 
@@ -1514,32 +1572,76 @@ async function loadDynamicData() {
     const dynamicData = await res.json();
     if (!dynamicData || !dynamicData.portfolio) return;
 
-    // Portföy güncel değerlerini güncelle
-    if (dynamicData.portfolio.items && typeof PORTFOLIO_ITEMS !== "undefined") {
+    window.DYNAMIC_DATA = dynamicData;
+    window.TICKER_DATA = {};
+
+    // 1. Portföy varlıklarını TICKER_DATA ve FALLBACK_DATA'ya işle
+    if (dynamicData.portfolio.items) {
       dynamicData.portfolio.items.forEach((item) => {
-        if (PORTFOLIO_ITEMS[item.ticker]) {
-          PORTFOLIO_ITEMS[item.ticker].price = item.price;
-          PORTFOLIO_ITEMS[item.ticker].value = item.market_value;
-          PORTFOLIO_ITEMS[item.ticker].weight = item.weight_pct;
-        }
-        if (FALLBACK_DATA && FALLBACK_DATA[item.ticker]) {
-          FALLBACK_DATA[item.ticker].price = item.price;
-          FALLBACK_DATA[item.ticker].change_percent = item.change_pct;
+        const t = item.ticker;
+        window.TICKER_DATA[t] = item;
+        if (!FALLBACK_DATA[t]) {
+          FALLBACK_DATA[t] = {
+            ticker: t,
+            name: item.name,
+            sector: item.sector || "Portföy Varlığı",
+            price: item.price,
+            change_percent: item.change_pct,
+            currency: "TRY"
+          };
+        } else {
+          FALLBACK_DATA[t].price = item.price;
+          FALLBACK_DATA[t].change_percent = item.change_pct;
+          if (item.market_cap) FALLBACK_DATA[t].market_cap = item.market_cap;
+          if (item.pe_ratio) FALLBACK_DATA[t].pe_ratio = item.pe_ratio;
+          if (item.pb_ratio) FALLBACK_DATA[t].pb_ratio = item.pb_ratio;
+          if (item.day_low) FALLBACK_DATA[t].day_low = item.day_low;
+          if (item.day_high) FALLBACK_DATA[t].day_high = item.day_high;
+          if (item.volume) FALLBACK_DATA[t].volume = item.volume;
         }
       });
     }
 
-    // İzleme listesi BIST çiplerini güncelle
-    if (dynamicData.watchlist && typeof FALLBACK_DATA !== "undefined") {
+    // 2. İzleme listesi BIST çiplerini güncelle
+    if (dynamicData.watchlist) {
       dynamicData.watchlist.forEach((item) => {
-        if (FALLBACK_DATA[item.ticker]) {
-          FALLBACK_DATA[item.ticker].price = item.price;
-          FALLBACK_DATA[item.ticker].change_percent = item.change_pct;
+        const t = item.ticker;
+        window.TICKER_DATA[t] = item;
+        if (!FALLBACK_DATA[t]) {
+          FALLBACK_DATA[t] = {
+            ticker: t,
+            name: item.symbol || t,
+            sector: "BIST Şirketi",
+            price: item.price,
+            change_percent: item.change_pct,
+            currency: "TRY"
+          };
+        } else {
+          FALLBACK_DATA[t].price = item.price;
+          FALLBACK_DATA[t].change_percent = item.change_pct;
+          if (item.market_cap) FALLBACK_DATA[t].market_cap = item.market_cap;
+          if (item.pe_ratio) FALLBACK_DATA[t].pe_ratio = item.pe_ratio;
+          if (item.pb_ratio) FALLBACK_DATA[t].pb_ratio = item.pb_ratio;
+          if (item.fifty_two_week_low) FALLBACK_DATA[t].day_low = item.day_low || item.fifty_two_week_low;
+          if (item.fifty_two_week_high) FALLBACK_DATA[t].day_high = item.day_high || item.fifty_two_week_high;
+          if (item.volume) FALLBACK_DATA[t].volume = item.volume;
         }
       });
     }
 
-    // Portföy toplam değerini güncelle
+    // 3. Makro göstergeleri güncelle
+    if (dynamicData.macro) {
+      const usdEl = document.getElementById("macro-usd");
+      if (usdEl && dynamicData.macro.USD_TRY) {
+        usdEl.textContent = dynamicData.macro.USD_TRY.price.toFixed(2);
+      }
+      const xuEl = document.getElementById("macro-xu100");
+      if (xuEl && dynamicData.macro.BIST_100) {
+        xuEl.textContent = formatCompact(dynamicData.macro.BIST_100.price);
+      }
+    }
+
+    // 4. Portföy toplam değerini güncelle
     const totalVal = dynamicData.portfolio.total_value;
     const totalValEl = document.getElementById("portfolio-total-value");
     if (totalValEl && totalVal) {
@@ -1550,23 +1652,34 @@ async function loadDynamicData() {
       headerPortEl.textContent = formatCurrency(totalVal) + " ₺";
     }
 
-    // UI bileşenlerini yeniden render et
-    if (document.getElementById("portfolio-table-body") && typeof renderPortfolio === "function") {
-      renderPortfolio();
+    // 5. Portföy pasta grafiklerini güncelle
+    if (currentPortfolioDoughnut && dynamicData.portfolio.items) {
+      currentPortfolioDoughnut.data.labels = dynamicData.portfolio.items.map(
+        (p) => `${p.ticker} (${formatCurrency(p.market_value)} TL)`
+      );
+      currentPortfolioDoughnut.data.datasets[0].data = dynamicData.portfolio.items.map((p) => p.weight_pct);
+      currentPortfolioDoughnut.update();
     }
-    if (FALLBACK_DATA && FALLBACK_DATA[currentTicker] && typeof renderDashboard === "function") {
+
+    // 6. Mevcut hisse dashboard'unu dinamik veriler ve gerçek mumlarla yeniden render et
+    if (FALLBACK_DATA[currentTicker] && typeof renderDashboard === "function") {
       renderDashboard(FALLBACK_DATA[currentTicker]);
     }
 
-    // Üst bara son güncelleme rozeti ekle
+    // 7. Üst bara son güncelleme rozeti ekle
     const marketStatus = document.getElementById("market-status");
     if (marketStatus && dynamicData.updated_at) {
       const dt = new Date(dynamicData.updated_at);
       const timeStr = dt.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
-      const badge = document.createElement("span");
-      badge.className = "text-[9px] text-emerald-400 font-mono ml-1.5 border border-emerald-500/30 px-1 py-0.2 rounded hidden sm:inline";
-      badge.textContent = `⚡ ${timeStr}`;
-      marketStatus.appendChild(badge);
+      const existingBadge = marketStatus.querySelector(".update-time-badge");
+      if (existingBadge) {
+        existingBadge.textContent = `⚡ ${timeStr}`;
+      } else {
+        const badge = document.createElement("span");
+        badge.className = "update-time-badge text-[9px] text-emerald-400 font-mono ml-1.5 border border-emerald-500/30 px-1 py-0.2 rounded hidden sm:inline";
+        badge.textContent = `⚡ ${timeStr}`;
+        marketStatus.appendChild(badge);
+      }
     }
   } catch (e) {
     console.warn("data.json dinamik yükleme fallback'e düştü:", e);
