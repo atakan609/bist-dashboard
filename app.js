@@ -246,7 +246,37 @@ const FALLBACK_DATA = {
     ]
   },
 
-  // --- ATAKAN'IN PORTFÖY VARLIKLARI (9 ENSTRÜMAN) ---
+  // --- ATAKAN'IN PORTFÖY VARLIKLARI (4+1 ÇEKİRDEK MODEL) ---
+  "PPZ": {
+    ticker: "PPZ",
+    name: "Azimut Portföy Para Piyasası Fonu (PPF)",
+    sector: "Para Piyasası / Likit Fon",
+    price: 364.62,
+    change: 0.50,
+    change_percent: 0.14,
+    currency: "TRY",
+    day_low: 364.00,
+    day_high: 365.00,
+    volume: 15000000,
+    market_cap: 12500000000,
+    pe_ratio: null,
+    pb_ratio: null,
+    ev_ebitda: null,
+    dividend_yield: 50.0,
+    dcf_fair_value: 364.62,
+    margin_of_safety: 0.0,
+    wacc: 0.50,
+    verdict: "Likit Nema / Günlük %50 Bileşik Getiri Kalkanı",
+    bull_thesis: [
+      "TCMB gecelik repo faizi ile risksiz günlük bileşik getiri birikimi.",
+      "BIST düşüşlerinde hisse almak için anında harcanabilir likidite tamponu.",
+      "Sıfır sermaye kaybı ve sıfır piyasa volatilitesi."
+    ],
+    bear_thesis: [
+      "TCMB faiz indirim döngüsünde getiri marjında kademeli daralma.",
+      "Yüksek enflasyon ortamında uzun vadeli hisse senedi kadar reel büyüme sunmaması."
+    ]
+  },
   "ALTIN.S1": {
     ticker: "ALTIN.S1",
     name: "Darphane Altın Sertifikası (BIST)",
@@ -729,14 +759,44 @@ const STATIC_REPORTS = [
 ];
 
 /**
- * Sayfa Yüklendiğinde Başlatıcı
+ * Sayfa Yüklendiğinde Başlatıcı (Hata Korumalı & Birleşik)
  */
-document.addEventListener("DOMContentLoaded", () => {
-  initTradingViewChart();
-  initPortfolioCharts();
-  setupEventListeners();
-  loadTicker("THYAO");
-  renderReports(STATIC_REPORTS);
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    initTradingViewChart();
+  } catch (e) {
+    console.error("TradingView grafik başlatma hatası:", e);
+  }
+
+  try {
+    initPortfolioCharts();
+  } catch (e) {
+    console.error("Portföy pastaları başlatma hatası:", e);
+  }
+
+  try {
+    setupEventListeners();
+  } catch (e) {
+    console.error("Olay dinleyicileri bağlama hatası:", e);
+  }
+
+  try {
+    await loadTicker("THYAO");
+  } catch (e) {
+    console.error("Varsayılan hisse yükleme hatası:", e);
+  }
+
+  try {
+    renderReports(STATIC_REPORTS);
+  } catch (e) {
+    console.error("Raporlar listesi render hatası:", e);
+  }
+
+  try {
+    await loadDynamicData();
+  } catch (e) {
+    console.error("data.json dinamik yükleme hatası:", e);
+  }
 });
 
 /**
@@ -790,42 +850,81 @@ function initTradingViewChart() {
     }
   });
 
-  // Mum Çubukları Serisi
-  candleSeries = tvChart.addCandlestickSeries({
-    upColor: "#10b981",
-    downColor: "#ef4444",
-    borderVisible: false,
-    wickUpColor: "#10b981",
-    wickDownColor: "#ef4444"
-  });
+  // Mum Çubukları Serisi (v4 ve v5 tam uyumlu)
+  if (typeof tvChart.addCandlestickSeries === "function") {
+    candleSeries = tvChart.addCandlestickSeries({
+      upColor: "#10b981",
+      downColor: "#ef4444",
+      borderVisible: false,
+      wickUpColor: "#10b981",
+      wickDownColor: "#ef4444"
+    });
+  } else if (typeof tvChart.addSeries === "function" && window.LightweightCharts && window.LightweightCharts.CandlestickSeries) {
+    candleSeries = tvChart.addSeries(window.LightweightCharts.CandlestickSeries, {
+      upColor: "#10b981",
+      downColor: "#ef4444",
+      borderVisible: false,
+      wickUpColor: "#10b981",
+      wickDownColor: "#ef4444"
+    });
+  }
 
-  // Hacim Histogramı Serisi
-  volumeSeries = tvChart.addHistogramSeries({
-    color: "#3b82f6",
-    priceFormat: {
-      type: "volume"
-    },
-    priceScaleId: "",
-    scaleMargins: {
-      top: 0.8,
-      bottom: 0.0
-    }
-  });
+  // Hacim Histogramı Serisi (v4 ve v5 tam uyumlu)
+  if (typeof tvChart.addHistogramSeries === "function") {
+    volumeSeries = tvChart.addHistogramSeries({
+      color: "#3b82f6",
+      priceFormat: {
+        type: "volume"
+      },
+      priceScaleId: "",
+      scaleMargins: {
+        top: 0.8,
+        bottom: 0.0
+      }
+    });
+  } else if (typeof tvChart.addSeries === "function" && window.LightweightCharts && window.LightweightCharts.HistogramSeries) {
+    volumeSeries = tvChart.addSeries(window.LightweightCharts.HistogramSeries, {
+      color: "#3b82f6",
+      priceFormat: {
+        type: "volume"
+      },
+      priceScaleId: "",
+      scaleMargins: {
+        top: 0.8,
+        bottom: 0.0
+      }
+    });
+  }
 
-  // Crosshair Üzerinde Legend Güncelleme
+  // Crosshair Üzerinde Legend Güncelleme (Hata Korumalı)
   tvChart.subscribeCrosshairMove((param) => {
     if (!param || !param.time || !param.seriesData) return;
-    const cData = param.seriesData.get(candleSeries);
-    const vData = param.seriesData.get(volumeSeries);
-    if (cData) {
-      document.getElementById("legend-open").textContent = formatCurrency(cData.open);
-      document.getElementById("legend-high").textContent = formatCurrency(cData.high);
-      document.getElementById("legend-low").textContent = formatCurrency(cData.low);
-      document.getElementById("legend-close").textContent = formatCurrency(cData.close);
-    }
-    if (vData) {
-      document.getElementById("legend-vol").textContent = formatCompact(vData.value);
-    }
+    try {
+      const getSeriesData = (series) => {
+        if (!series || !param.seriesData) return null;
+        if (typeof param.seriesData.get === "function") {
+          return param.seriesData.get(series);
+        }
+        return param.seriesData[series] || null;
+      };
+
+      const cData = getSeriesData(candleSeries);
+      const vData = getSeriesData(volumeSeries);
+      if (cData) {
+        const oEl = document.getElementById("legend-open");
+        const hEl = document.getElementById("legend-high");
+        const lEl = document.getElementById("legend-low");
+        const kEl = document.getElementById("legend-close");
+        if (oEl) oEl.textContent = formatCurrency(cData.open);
+        if (hEl) hEl.textContent = formatCurrency(cData.high);
+        if (lEl) lEl.textContent = formatCurrency(cData.low);
+        if (kEl) kEl.textContent = formatCurrency(cData.close);
+      }
+      if (vData) {
+        const volEl = document.getElementById("legend-vol");
+        if (volEl) volEl.textContent = formatCompact(vData.value);
+      }
+    } catch (_) {}
   });
 
   // Otomatik Yeniden Boyutlandırma
@@ -1473,8 +1572,3 @@ async function loadDynamicData() {
     console.warn("data.json dinamik yükleme fallback'e düştü:", e);
   }
 }
-
-// Otomatik başlatıcıya bağla
-window.addEventListener("DOMContentLoaded", () => {
-  loadDynamicData();
-});
