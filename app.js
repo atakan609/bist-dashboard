@@ -794,9 +794,9 @@ const STATIC_REPORTS = [
 ];
 
 /**
- * Sayfa Yüklendiğinde Başlatıcı (Hata Korumalı & Birleşik)
+ * Sayfa Yüklendiğinde Başlatıcı (Hata Korumalı, Birleşik & readyState Uyumlu)
  */
-document.addEventListener("DOMContentLoaded", async () => {
+async function initApp() {
   try {
     startLiveClock();
   } catch (e) {
@@ -838,7 +838,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   } catch (e) {
     console.error("data.json dinamik yükleme hatası:", e);
   }
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initApp);
+} else {
+  initApp();
+}
 
 /**
  * 1. TradingView Lightweight Charts Kurulumu
