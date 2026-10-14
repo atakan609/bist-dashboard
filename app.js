@@ -1698,23 +1698,7 @@ async function loadDynamicData() {
       renderDashboard(FALLBACK_DATA[currentTicker]);
     }
 
-    // 6. Üst bara son güncelleme rozeti ekle
-    const marketStatus = document.getElementById("market-status");
-    if (marketStatus && dynamicData.updated_at) {
-      const dt = new Date(dynamicData.updated_at);
-      const timeStr = dt.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
-      const existingBadge = marketStatus.querySelector(".update-time-badge");
-      if (existingBadge) {
-        existingBadge.textContent = `⚡ ${timeStr}`;
-      } else {
-        const badge = document.createElement("span");
-        badge.className = "update-time-badge text-[9px] text-emerald-400 font-mono ml-1.5 border border-emerald-500/30 px-1 py-0.2 rounded hidden sm:inline";
-        badge.textContent = `⚡ ${timeStr}`;
-        marketStatus.appendChild(badge);
-      }
-    }
-
-    // 7. Supabase Realtime ve Sandbox Masasını Başlat
+    // 6. Supabase Realtime ve Sandbox Masasını Başlat
     initSupabaseRealtime();
     setupSandboxModal();
   } catch (e) {
@@ -1831,6 +1815,19 @@ function handleRealtimeQuoteUpdate(newQuote) {
   }
   if (window.TICKER_DATA) {
     window.TICKER_DATA[ticker] = { ...(window.TICKER_DATA[ticker] || {}), price, change_pct: chg };
+  }
+
+  // WebSocket canlı akış rozetini gerçek gelen veri saatiyle güncelle
+  const marketStatus = document.getElementById("market-status");
+  if (marketStatus) {
+    let tickBadge = marketStatus.querySelector(".update-time-badge");
+    const nowTime = new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    if (!tickBadge) {
+      tickBadge = document.createElement("span");
+      tickBadge.className = "update-time-badge text-[10px] text-emerald-400 font-mono ml-1.5 border border-emerald-500/30 px-1.5 py-0.5 rounded";
+      marketStatus.appendChild(tickBadge);
+    }
+    tickBadge.textContent = `⚡ ${nowTime}`;
   }
 
   // Eğer açık olan hisse ise canlı ekranda flaşla

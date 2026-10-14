@@ -175,11 +175,65 @@ def run_cycle() -> int:
     return 0
 
 
+PID_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "worker.pid")
+
+
+def stop_running_worker() -> bool:
+    """Stops any currently running stream worker using the PID file or taskkill."""
+    stopped = False
+    if os.path.exists(PID_FILE):
+        try:
+            with open(PID_FILE, "r") as f:
+                pid = int(f.read().strip())
+            logger.info(f"Terminating worker process with PID {pid}...")
+            if sys.platform == "win32":
+                os.system(f"taskkill /PID {pid} /F >nul 2>&1")
+            else:
+                os.kill(pid, 15)
+            stopped = True
+        except Exception as e:
+            logger.warning(f"Failed to kill PID from file: {e}")
+        finally:
+            if os.path.exists(PID_FILE):
+                os.remove(PID_FILE)
+
+    # Windows fallback: taskkill by command line pattern if needed
+    if not stopped and sys.platform == "win32":
+        os.system("wmic process where \"name='python.exe' and commandline like '%supabase_worker.py%--stream%'\" call terminate >nul 2>&1")
+        stopped = True
+
+    logger.info("Worker process successfully stopped.")
+    return stopped
+
+
+def get_worker_status() -> None:
+    """Prints current worker status."""
+    if os.path.exists(PID_FILE):
+        try:
+            with open(PID_FILE, "r") as f:
+                pid = int(f.read().strip())
+            logger.info(f"Worker is currently RUNNING (PID: {pid}).")
+            return
+        except Exception:
+            pass
+    logger.info("Worker is currently STOPPED.")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Supabase BIST Realtime Feeder")
     parser.add_argument("--stream", action="store_true", help="Run continuous streaming loop")
     parser.add_argument("--interval", type=int, default=15, help="Interval in seconds between ticks (default: 15)")
+    parser.add_argument("--stop", action="store_true", help="Stop any running worker daemon")
+    parser.add_argument("--status", action="store_true", help="Check worker running status")
     args = parser.parse_args()
+
+    if args.stop:
+        stop_running_worker()
+        return
+
+    if args.status:
+        get_worker_status()
+        return
 
     logger.info("Initializing Supabase Realtime BIST Feeder...")
     if not args.stream:
@@ -187,17 +241,31 @@ def main() -> None:
         logger.info(f"Single sync cycle completed. Pushed {count} assets.")
         return
 
-    logger.info(f"Starting continuous stream loop (Interval: {args.interval}s)... Press Ctrl+C to stop.")
-    while True:
-        try:
-            run_cycle()
-            time.sleep(args.interval)
-        except KeyboardInterrupt:
-            logger.info("Stream worker stopped by user.")
-            break
-        except Exception as e:
-            logger.error(f"Unexpected error in stream loop: {e}")
-            time.sleep(args.interval)
+    # Write PID file for process tracking and easy termination
+    try:
+        with open(PID_FILE, "w") as f:
+            f.write(str(os.getpid()))
+    except Exception as e:
+        logger.warning(f"Could not write PID file: {e}")
+
+    logger.info(f"Starting continuous stream loop (PID: {os.getpid()}, Interval: {args.interval}s)... Press Ctrl+C to stop.")
+    try:
+        while True:
+            try:
+                run_cycle()
+                time.sleep(args.interval)
+            except KeyboardInterrupt:
+                logger.info("Stream worker stopped by user.")
+                break
+            except Exception as e:
+                logger.error(f"Unexpected error in stream loop: {e}")
+                time.sleep(args.interval)
+    finally:
+        if os.path.exists(PID_FILE):
+            try:
+                os.remove(PID_FILE)
+            except Exception:
+                pass
 
 
 if __name__ == "__main__":
