@@ -109,7 +109,7 @@
       <div class="flex items-center gap-2.5 text-[11px] font-mono shrink-0">
         <div class="hidden lg:flex items-center gap-1.5 text-slate-300">
           <span class="text-slate-500">Portföy:</span>
-          <span id="header-portfolio-val" class="font-bold text-emerald-400">4.842 ₺</span>
+          <span id="header-portfolio-val" class="font-bold text-emerald-400">4.583 ₺</span>
         </div>
         <div class="hidden md:flex items-center gap-1 text-slate-300">
           <span class="text-slate-500">USD:</span>
@@ -352,20 +352,19 @@
       <div id="tab-content-portfolio" class="space-y-6">
         
         <!-- Portföy Sağlık Teşhisi Özet Kartı -->
-        <div class="bg-gradient-to-r from-amber-950/30 via-slate-900 to-blue-950/30 border border-amber-500/30 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="bg-gradient-to-r from-emerald-950/30 via-slate-900 to-blue-950/30 border border-emerald-500/30 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-xs font-bold font-mono border border-amber-500/30">TEŞHİS</span>
-              <h3 class="text-sm font-bold text-white">4.842,13 TL Portföy Sağlık Teşhisi: Aşırı Parçalanmış & Sığ Tahta Riski</h3>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-xs font-bold font-mono border border-emerald-500/30">DURUM</span>
+              <h3 class="text-sm font-bold text-white">4.583,37 TL Portföy Durumu: 4+1 Konsolide Çekirdek Model İcrası Tamamlandı</h3>
             </div>
             <p class="text-xs text-slate-300">
-              9 farklı şirkete bölünmüş sermayede efektif varlık sayısı <strong class="text-amber-300 font-mono">N_eff = 8.25</strong>. 
-              Pozisyon başına düşen ortalama ~450 TL, tavan kârında dahi bilişsel takip maliyetini karşılamamaktadır.
+              5 toksik tahta (SASA, PEKGY, MANAS, INFO, HDFGS) tamamen tasfiye edildi. Sermaye 4 ana büyüme sütunu (ALTIN.S1, AKBNK, HRKET, GENIL) ve PPZ likit faiz kalkanına kilitlendi.
             </p>
           </div>
           <div class="flex items-center gap-2">
             <span class="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 text-center whitespace-nowrap">
-              Atlas Kararı: 4+1 Konsolidasyon
+              Atlas Kararı: %100 Konsolide & Dengeli
             </span>
           </div>
         </div>
@@ -373,14 +372,14 @@
         <!-- Yan Yana İki Pasta Grafik: Mevcut vs Hedef -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           
-          <!-- Sol Pasta: Mevcut 9 Varlıklı Dağılım -->
+          <!-- Sol Pasta: Mevcut 4+1 Varlıklı Dağılım -->
           <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex flex-col items-center">
             <div class="w-full flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
               <div>
-                <h4 class="text-xs font-bold text-slate-200">Mevcut Durum: 9 Varlık + Nakit</h4>
-                <p class="text-[11px] text-slate-400">4.842,13 TL • HHI = 0.1212</p>
+                <h4 class="text-xs font-bold text-slate-200">Canlı Dağılım: 4 Varlık + PPZ Fonu</h4>
+                <p class="text-[11px] text-slate-400">4.583,37 TL • HHI = 0.258</p>
               </div>
-              <span class="text-[10px] px-2 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-mono">Aşırı Dağınık</span>
+              <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono">Dengeli Dağılım</span>
             </div>
             <div class="w-60 h-60 relative my-2">
               <canvas id="current-portfolio-chart"></canvas>
@@ -390,16 +389,11 @@
                 <span>Varlık (Kod)</span>
                 <span>Tutar (TL) / Pay (%)</span>
               </div>
-              <div class="flex justify-between text-slate-300"><span>ALTIN.S1 (Darphane Altın)</span><strong>1.001,14 TL (%20,7)</strong></div>
-              <div class="flex justify-between text-slate-300"><span>HRKET (Proje Lojistiği)</span><strong>570,53 TL (%11,8)</strong></div>
-              <div class="flex justify-between text-slate-300"><span>HDFGS (Girişim Sermayesi)</span><strong>550,40 TL (%11,4)</strong></div>
-              <div class="flex justify-between text-slate-300"><span>AKBNK (BIST 30 Banka)</span><strong>479,85 TL (%9,9)</strong></div>
-              <div class="flex justify-between text-slate-300"><span>SASA (Petrokimya/Elyaf)</span><strong>467,50 TL (%9,7)</strong></div>
-              <div class="flex justify-between text-slate-300"><span>INFO (Aracı Kurum)</span><strong>467,04 TL (%9,7)</strong></div>
-              <div class="flex justify-between text-slate-300"><span>GENIL (İlaç & Biyoteknoloji)</span><strong>442,68 TL (%9,1)</strong></div>
-              <div class="flex justify-between text-slate-300"><span>MANAS (Teknoloji & Sayaç)</span><strong>437,10 TL (%9,0)</strong></div>
-              <div class="flex justify-between text-slate-300"><span>PEKGY (GYO)</span><strong>394,24 TL (%8,1)</strong></div>
-              <div class="flex justify-between text-slate-400"><span>Serbest Nakit</span><strong>31,65 TL (%0,6)</strong></div>
+              <div class="flex justify-between text-amber-300"><span>ALTIN.S1 (Darphane Altın)</span><strong>1.421,00 TL (%31,0)</strong></div>
+              <div class="flex justify-between text-blue-300"><span>AKBNK (BIST 30 Banka)</span><strong>1.289,15 TL (%28,1)</strong></div>
+              <div class="flex justify-between text-emerald-300"><span>HRKET (Proje Lojistiği)</span><strong>828,20 TL (%18,1)</strong></div>
+              <div class="flex justify-between text-cyan-300"><span>GENIL (İlaç & Biyoteknoloji)</span><strong>680,40 TL (%14,8)</strong></div>
+              <div class="flex justify-between text-slate-300"><span>PPZ FONU (Likit Nema Tamponu)</span><strong>364,62 TL (%8,0)</strong></div>
             </div>
           </div>
 

@@ -18,20 +18,16 @@ import yfinance as yf
 logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(levelname)s] %(message)s")
 logger = logging.getLogger("DashboardDataBuilder")
 
-# Core Assets: Atakan's Portfolio Holdings
+# Core Assets: Atakan's Portfolio Holdings (4+1 Core Model)
 PORTFOLIO_HOLDINGS = [
-    {"ticker": "ALTIN.S1", "name": "Darphane Altın Sertifikası", "lot": 14, "fallback_price": 71.51, "sector": "Emtia / Altın"},
-    {"ticker": "HRKET.IS", "name": "Hareket Proje Taşımacılığı", "lot": 59, "fallback_price": 9.67, "sector": "Lojistik / Enerji"},
-    {"ticker": "HDFGS.IS", "name": "Hedef Girişim Sermayesi", "lot": 320, "fallback_price": 1.72, "sector": "Girişim Sermayesi"},
-    {"ticker": "AKBNK.IS", "name": "Akbank T.A.Ş.", "lot": 7, "fallback_price": 68.55, "sector": "Bankacılık"},
-    {"ticker": "SASA.IS", "name": "Sasa Polyester Sanayi", "lot": 250, "fallback_price": 1.87, "sector": "Petrokimya"},
-    {"ticker": "INFO.IS", "name": "İnfo Yatırım Menkul Değerler", "lot": 336, "fallback_price": 1.39, "sector": "Aracı Kurum"},
-    {"ticker": "GENIL.IS", "name": "Gen İlaç ve Sağlık Ürünleri", "lot": 84, "fallback_price": 5.27, "sector": "İlaç / Sağlık"},
-    {"ticker": "MANAS.IS", "name": "Manas Enerji Yönetimi", "lot": 94, "fallback_price": 4.65, "sector": "Enerji / Sayaç"},
-    {"ticker": "PEKGY.IS", "name": "Peker GYO", "lot": 256, "fallback_price": 1.54, "sector": "GYO / İnşaat"},
+    {"ticker": "ALTIN.S1", "name": "Darphane Altın Sertifikası", "lot": 20, "fallback_price": 71.05, "sector": "Emtia / Altın"},
+    {"ticker": "AKBNK.IS", "name": "Akbank T.A.Ş.", "lot": 19, "fallback_price": 67.85, "sector": "Bankacılık"},
+    {"ticker": "HRKET.IS", "name": "Hareket Proje Taşımacılığı", "lot": 82, "fallback_price": 10.10, "sector": "Lojistik / Enerji"},
+    {"ticker": "GENIL.IS", "name": "Gen İlaç ve Sağlık Ürünleri", "lot": 135, "fallback_price": 5.04, "sector": "İlaç / Sağlık"},
+    {"ticker": "PPZ", "name": "Azimut Portföy Para Piyasası Fonu (PPF)", "lot": 1, "fallback_price": 364.62, "sector": "Para Piyasası / Likit", "is_fund": True},
 ]
 
-CASH_TRY = 31.65
+CASH_TRY = 0.00
 
 # Additional Watched BIST Chips
 WATCHLIST_TICKERS = [
@@ -108,20 +104,35 @@ def build_full_dataset() -> Dict[str, Any]:
 
     for item in PORTFOLIO_HOLDINGS:
         sym = item["ticker"]
-        q = fetch_quote(sym, fallback_price=item["fallback_price"])
-        val = q["price"] * item["lot"]
-        total_market_value += val
-        portfolio_items.append({
-            "ticker": item["ticker"].replace(".IS", ""),
-            "name": item["name"],
-            "lot": item["lot"],
-            "price": q["price"],
-            "change_pct": q["change_pct"],
-            "market_value": round(val, 2),
-            "sector": item["sector"],
-            "pe_ratio": q.get("pe_ratio"),
-            "pb_ratio": q.get("pb_ratio"),
-        })
+        if item.get("is_fund"):
+            val = item["fallback_price"] * item["lot"]
+            total_market_value += val
+            portfolio_items.append({
+                "ticker": item["ticker"],
+                "name": item["name"],
+                "lot": item["lot"],
+                "price": item["fallback_price"],
+                "change_pct": 0.0,
+                "market_value": round(val, 2),
+                "sector": item["sector"],
+                "pe_ratio": None,
+                "pb_ratio": None,
+            })
+        else:
+            q = fetch_quote(sym, fallback_price=item["fallback_price"])
+            val = q["price"] * item["lot"]
+            total_market_value += val
+            portfolio_items.append({
+                "ticker": item["ticker"].replace(".IS", ""),
+                "name": item["name"],
+                "lot": item["lot"],
+                "price": q["price"],
+                "change_pct": q["change_pct"],
+                "market_value": round(val, 2),
+                "sector": item["sector"],
+                "pe_ratio": q.get("pe_ratio"),
+                "pb_ratio": q.get("pb_ratio"),
+            })
 
     # Compute weights
     for p in portfolio_items:
@@ -139,7 +150,7 @@ def build_full_dataset() -> Dict[str, Any]:
         {"ticker": "AKBNK", "name": "Akbank T.A.Ş.", "target_weight_pct": 25.0, "role": "BIST 30 Lokomotif & Temettü Gücü"},
         {"ticker": "HRKET", "name": "Hareket Proje Taşımacılığı", "target_weight_pct": 18.0, "role": "Global Ağır Nakliye & Döviz Geliri"},
         {"ticker": "GENIL", "name": "Gen İlaç ve Sağlık", "target_weight_pct": 15.0, "role": "Defansif Büyüme & Net Nakit"},
-        {"ticker": "PPF", "name": "Para Piyasası Fonu / Nakit", "target_weight_pct": 12.0, "role": "%50 Faiz Kalkanı & Fırsat Akçesi"},
+        {"ticker": "PPF", "name": "Para Piyasası Fonu / Nakit (PPZ)", "target_weight_pct": 12.0, "role": "%50 Faiz Kalkanı & Fırsat Akçesi"},
     ]
 
     return {

@@ -15,7 +15,7 @@ let currentTicker = "THYAO";
 
 // Portföy Varlıkları Kümesi (Tag kontrolü için)
 const PORTFOLIO_TICKERS = new Set([
-  "ALTIN.S1", "AKBNK", "HRKET", "GENIL", "SASA", "INFO", "MANAS", "PEKGY", "HDFGS"
+  "ALTIN.S1", "AKBNK", "HRKET", "GENIL", "PPZ"
 ]);
 
 // 1. Zengin BIST & Portföy Veritabanı (Statik GitHub Pages Kalkanı)
@@ -1118,31 +1118,21 @@ function initPortfolioCharts() {
       type: "doughnut",
       data: {
         labels: [
-          "ALTIN.S1 (1.001 TL)",
-          "HRKET (571 TL)",
-          "HDFGS (550 TL)",
-          "AKBNK (480 TL)",
-          "SASA (468 TL)",
-          "INFO (467 TL)",
-          "GENIL (443 TL)",
-          "MANAS (437 TL)",
-          "PEKGY (394 TL)",
-          "Nakit (32 TL)"
+          "ALTIN.S1 (1.421 TL)",
+          "AKBNK (1.289 TL)",
+          "HRKET (828 TL)",
+          "GENIL (680 TL)",
+          "PPZ / Fon (365 TL)"
         ],
         datasets: [
           {
-            data: [20.68, 11.78, 11.37, 9.91, 9.65, 9.65, 9.14, 9.03, 8.14, 0.65],
+            data: [31.00, 28.13, 18.07, 14.84, 7.96],
             backgroundColor: [
               "#f59e0b", // ALTIN - Kehribar
-              "#10b981", // HRKET - Yeşil
-              "#64748b", // HDFGS - Slate
               "#3b82f6", // AKBNK - Mavi
-              "#ef4444", // SASA - Kırmızı
-              "#8b5cf6", // INFO - Mor
+              "#10b981", // HRKET - Yeşil
               "#06b6d4", // GENIL - Camgöbeği
-              "#ec4899", // MANAS - Pembe
-              "#f43f5e", // PEKGY - Gül
-              "#94a3b8"  // Nakit - Gri
+              "#94a3b8"  // PPZ - Gri / Likit
             ],
             borderColor: "#0f172a",
             borderWidth: 2,
