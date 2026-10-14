@@ -13,10 +13,27 @@ let currentPortfolioDoughnut = null;
 let targetPortfolioDoughnut = null;
 let currentTicker = "THYAO";
 
-// Portföy Varlıkları Kümesi (Tag kontrolü için)
-const PORTFOLIO_TICKERS = new Set([
-  "ALTIN.S1", "AKBNK", "HRKET", "GENIL", "PPZ"
-]);
+// Supabase Realtime Yapılandırması (BIST Analyze Projesi)
+const SUPABASE_CONFIG = {
+  url: "https://uzythsdqpbzqcapepkdz.supabase.co",
+  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6eXRoc2RxcGJ6cWNhcGVwa2R6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5NzgwODUsImV4cCI6MjEwNzU1NDA4NX0.U4F-SZiuFy90gmDSNvshp5fZlMZJ0Lu-kuYxnzWvkgw"
+};
+let supabaseClient = null;
+if (window.supabase && typeof window.supabase.createClient === "function") {
+  supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+}
+
+// 4+1 Çekirdek Model Varsayılan Portföy Kütüğü (AtakanOS 400-Vault ile Eşit)
+const DEFAULT_PORTFOLIO_HOLDINGS = [
+  { ticker: "ALTIN.S1", name: "Darphane Altın Sertifikası", lot: 20, cost: 71.05, sector: "Emtia / Altın" },
+  { ticker: "AKBNK", name: "Akbank T.A.Ş.", lot: 19, cost: 67.85, sector: "Bankacılık" },
+  { ticker: "HRKET", name: "Hareket Proje Taşımacılığı", lot: 82, cost: 10.10, sector: "Lojistik / Enerji" },
+  { ticker: "GENIL", name: "Gen İlaç ve Sağlık Ürünleri", lot: 135, cost: 5.04, sector: "İlaç / Sağlık" },
+  { ticker: "PPZ", name: "Azimut Portföy Para Piyasası Fonu", lot: 1, cost: 364.62, sector: "Para Piyasası" }
+];
+
+// Portföy Varlıkları Kümesi (Dinamik senkronize edilir)
+let PORTFOLIO_TICKERS = new Set(["ALTIN.S1", "AKBNK", "HRKET", "GENIL", "PPZ"]);
 
 // 1. Zengin BIST & Portföy Veritabanı (Statik GitHub Pages Kalkanı)
 const FALLBACK_DATA = {
@@ -1641,32 +1658,15 @@ async function loadDynamicData() {
       }
     }
 
-    // 4. Portföy toplam değerini güncelle
-    const totalVal = dynamicData.portfolio.total_value;
-    const totalValEl = document.getElementById("portfolio-total-value");
-    if (totalValEl && totalVal) {
-      totalValEl.textContent = formatCurrency(totalVal) + " TL";
-    }
-    const headerPortEl = document.getElementById("header-portfolio-val");
-    if (headerPortEl && totalVal) {
-      headerPortEl.textContent = formatCurrency(totalVal) + " ₺";
-    }
+    // 4. Portföy toplam değerini ve metrikleri dinamik yeniden hesapla
+    recalculatePortfolioMetrics();
 
-    // 5. Portföy pasta grafiklerini güncelle
-    if (currentPortfolioDoughnut && dynamicData.portfolio.items) {
-      currentPortfolioDoughnut.data.labels = dynamicData.portfolio.items.map(
-        (p) => `${p.ticker} (${formatCurrency(p.market_value)} TL)`
-      );
-      currentPortfolioDoughnut.data.datasets[0].data = dynamicData.portfolio.items.map((p) => p.weight_pct);
-      currentPortfolioDoughnut.update();
-    }
-
-    // 6. Mevcut hisse dashboard'unu dinamik veriler ve gerçek mumlarla yeniden render et
+    // 5. Mevcut hisse dashboard'unu dinamik veriler ve gerçek mumlarla yeniden render et
     if (FALLBACK_DATA[currentTicker] && typeof renderDashboard === "function") {
       renderDashboard(FALLBACK_DATA[currentTicker]);
     }
 
-    // 7. Üst bara son güncelleme rozeti ekle
+    // 6. Üst bara son güncelleme rozeti ekle
     const marketStatus = document.getElementById("market-status");
     if (marketStatus && dynamicData.updated_at) {
       const dt = new Date(dynamicData.updated_at);
@@ -1681,7 +1681,369 @@ async function loadDynamicData() {
         marketStatus.appendChild(badge);
       }
     }
+
+    // 7. Supabase Realtime ve Sandbox Masasını Başlat
+    initSupabaseRealtime();
+    setupSandboxModal();
   } catch (e) {
     console.warn("data.json dinamik yükleme fallback'e düştü:", e);
+    initSupabaseRealtime();
+    setupSandboxModal();
+  }
+}
+
+/**
+ * 9. Supabase Realtime & Dinamik Portföy Masası Motoru
+ */
+
+// Aktif Portföyü Al (localStorage veya Varsayılan 4+1 Kütük)
+function getActivePortfolioHoldings() {
+  try {
+    const raw = localStorage.getItem("atakanos_custom_portfolio");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch (_) {}
+  return JSON.parse(JSON.stringify(DEFAULT_PORTFOLIO_HOLDINGS));
+}
+
+function saveActivePortfolioHoldings(list) {
+  try {
+    localStorage.setItem("atakanos_custom_portfolio", JSON.stringify(list));
+  } catch (_) {}
+  recalculatePortfolioMetrics();
+}
+
+function resetActivePortfolioHoldings() {
+  try {
+    localStorage.removeItem("atakanos_custom_portfolio");
+  } catch (_) {}
+  recalculatePortfolioMetrics();
+}
+
+// Portföy Metriklerini Canlı Yeniden Hesapla
+function recalculatePortfolioMetrics() {
+  const holdings = getActivePortfolioHoldings();
+  let totalMarketVal = 0;
+  let totalCostVal = 0;
+
+  holdings.forEach((item) => {
+    const livePrice = (FALLBACK_DATA[item.ticker] && FALLBACK_DATA[item.ticker].price) || item.cost;
+    const mVal = livePrice * item.lot;
+    const cVal = item.cost * item.lot;
+    totalMarketVal += mVal;
+    totalCostVal += cVal;
+  });
+
+  const netPl = totalMarketVal - totalCostVal;
+  const netPlPct = totalCostVal > 0 ? (netPl / totalCostVal) * 100 : 0;
+
+  // 1. Üst Bar ve Ana Ekran Kartlarını Güncelle
+  const headerPort = document.getElementById("header-portfolio-val");
+  if (headerPort) {
+    headerPort.textContent = `${formatCurrency(totalMarketVal)} ₺`;
+    headerPort.classList.add("text-emerald-300");
+    setTimeout(() => headerPort.classList.remove("text-emerald-300"), 600);
+  }
+  const mainPort = document.getElementById("portfolio-total-value");
+  if (mainPort) mainPort.textContent = `${formatCurrency(totalMarketVal)} TL`;
+
+  // 2. Sandbox Özet Kartlarını Güncelle
+  const sbTotal = document.getElementById("sb-total-val");
+  const sbCost = document.getElementById("sb-total-cost");
+  const sbPl = document.getElementById("sb-net-pl");
+  const sbCount = document.getElementById("sb-asset-count");
+
+  if (sbTotal) sbTotal.textContent = `${formatCurrency(totalMarketVal)} ₺`;
+  if (sbCost) sbCost.textContent = `${formatCurrency(totalCostVal)} ₺`;
+  if (sbPl) {
+    const isPos = netPl >= 0;
+    sbPl.textContent = `${isPos ? "+" : ""}${formatCurrency(netPl)} ₺ (${isPos ? "+" : ""}${netPlPct.toFixed(2)}%)`;
+    sbPl.className = `text-base sm:text-lg font-bold font-mono ${isPos ? "text-emerald-400" : "text-rose-400"}`;
+  }
+  if (sbCount) sbCount.textContent = `${holdings.length} Varlık`;
+
+  // 3. Portföy Pasta Grafiğini Güncelle
+  if (currentPortfolioDoughnut && holdings.length > 0) {
+    currentPortfolioDoughnut.data.labels = holdings.map((p) => {
+      const pPrice = (FALLBACK_DATA[p.ticker] && FALLBACK_DATA[p.ticker].price) || p.cost;
+      return `${p.ticker} (${formatCurrency(p.lot * pPrice)} TL)`;
+    });
+    currentPortfolioDoughnut.data.datasets[0].data = holdings.map((p) => {
+      const pPrice = (FALLBACK_DATA[p.ticker] && FALLBACK_DATA[p.ticker].price) || p.cost;
+      const weight = totalMarketVal > 0 ? (p.lot * pPrice) / totalMarketVal * 100 : 0;
+      return parseFloat(weight.toFixed(2));
+    });
+    currentPortfolioDoughnut.update();
+  }
+
+  // 4. Portföy Varlık Kümesini Güncelle
+  PORTFOLIO_TICKERS = new Set(holdings.map((p) => p.ticker));
+}
+
+// Supabase Realtime Gelen Fiyatı İşle
+function handleRealtimeQuoteUpdate(newQuote) {
+  if (!newQuote || !newQuote.ticker) return;
+  const ticker = newQuote.ticker.toUpperCase().replace(".IS", "");
+  const price = parseFloat(newQuote.price);
+  const chg = parseFloat(newQuote.change_pct || 0);
+
+  // FALLBACK_DATA ve TICKER_DATA güncelle
+  if (FALLBACK_DATA[ticker]) {
+    FALLBACK_DATA[ticker].price = price;
+    FALLBACK_DATA[ticker].change_percent = chg;
+    if (newQuote.day_low) FALLBACK_DATA[ticker].day_low = parseFloat(newQuote.day_low);
+    if (newQuote.day_high) FALLBACK_DATA[ticker].day_high = parseFloat(newQuote.day_high);
+    if (newQuote.volume) FALLBACK_DATA[ticker].volume = parseInt(newQuote.volume);
+  }
+  if (window.TICKER_DATA) {
+    window.TICKER_DATA[ticker] = { ...(window.TICKER_DATA[ticker] || {}), price, change_pct: chg };
+  }
+
+  // Eğer açık olan hisse ise canlı ekranda flaşla
+  if (currentTicker === ticker) {
+    const pEl = document.getElementById("stock-price");
+    if (pEl) {
+      pEl.textContent = `${formatCurrency(price)} ₺`;
+      pEl.classList.add(chg >= 0 ? "text-emerald-400" : "text-rose-400");
+      setTimeout(() => pEl.classList.remove("text-emerald-400", "text-rose-400"), 800);
+    }
+    const chgEl = document.getElementById("stock-change");
+    if (chgEl) {
+      const isPos = chg >= 0;
+      chgEl.textContent = `${isPos ? "▲ +" : "▼ "}${chg.toFixed(2)}%`;
+      chgEl.className = `text-xs font-mono font-bold flex items-center ${isPos ? "text-emerald-400" : "text-rose-400"}`;
+    }
+    if (newQuote.day_low && newQuote.day_high) {
+      const low = parseFloat(newQuote.day_low);
+      const high = parseFloat(newQuote.day_high);
+      const dl = document.getElementById("day-low");
+      const dh = document.getElementById("day-high");
+      if (dl) dl.textContent = formatCurrency(low);
+      if (dh) dh.textContent = formatCurrency(high);
+      const pct = Math.max(5, Math.min(95, ((price - low) / (high - low || 1)) * 100));
+      const bar = document.getElementById("day-range-bar");
+      if (bar) bar.style.width = `${pct}%`;
+    }
+  }
+
+  // Portföy toplamını ve dağılımını canlı yeniden hesapla
+  recalculatePortfolioMetrics();
+}
+
+// Supabase Realtime WebSocket Kanalını Başlat
+function initSupabaseRealtime() {
+  if (!supabaseClient) {
+    const dot = document.getElementById("realtime-status-dot");
+    const lbl = document.getElementById("realtime-status-label");
+    if (lbl) lbl.textContent = "Offline";
+    return;
+  }
+
+  try {
+    const channel = supabaseClient
+      .channel("bist-realtime-public")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "bist_quotes" },
+        (payload) => {
+          if (payload && payload.new) {
+            handleRealtimeQuoteUpdate(payload.new);
+          }
+        }
+      )
+      .subscribe((status) => {
+        const dot = document.getElementById("realtime-status-dot");
+        const lbl = document.getElementById("realtime-status-label");
+        if (status === "SUBSCRIBED") {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse";
+          if (lbl) lbl.textContent = "Canlı (WS)";
+        } else {
+          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400";
+          if (lbl) lbl.textContent = status;
+        }
+      });
+  } catch (err) {
+    console.warn("Supabase Realtime subscription error:", err);
+  }
+}
+
+// İnteraktif Portföy Masası (Sandbox) Arayüz Yöneticisi
+function setupSandboxModal() {
+  const modal = document.getElementById("sandbox-modal");
+  const openBtn = document.getElementById("open-sandbox-btn");
+  const closeBtn = document.getElementById("close-sandbox-btn");
+  const saveBtn = document.getElementById("sb-save-btn");
+  const resetBtn = document.getElementById("sb-reset-btn");
+  const exportBtn = document.getElementById("sb-export-btn");
+  const addBtn = document.getElementById("sb-add-btn");
+
+  if (!modal) return;
+
+  function renderTable() {
+    const tbody = document.getElementById("sb-table-body");
+    if (!tbody) return;
+    tbody.innerHTML = "";
+
+    const holdings = getActivePortfolioHoldings();
+    let totalMarket = 0;
+    holdings.forEach((h) => {
+      const p = (FALLBACK_DATA[h.ticker] && FALLBACK_DATA[h.ticker].price) || h.cost;
+      totalMarket += p * h.lot;
+    });
+
+    holdings.forEach((item, idx) => {
+      const livePrice = (FALLBACK_DATA[item.ticker] && FALLBACK_DATA[item.ticker].price) || item.cost;
+      const mVal = livePrice * item.lot;
+      const weight = totalMarket > 0 ? ((mVal / totalMarket) * 100).toFixed(1) : "0.0";
+      const tr = document.createElement("tr");
+      tr.className = "hover:bg-slate-800/40 transition text-xs";
+      tr.innerHTML = `
+        <td class="p-2.5 font-bold text-blue-400">${item.ticker}</td>
+        <td class="p-2.5 text-slate-300 truncate max-w-[140px]">${item.name || item.ticker}</td>
+        <td class="p-2.5">
+          <input type="number" min="1" value="${item.lot}" data-idx="${idx}" class="sb-lot-input w-20 bg-slate-950 border border-slate-700 px-1.5 py-0.5 rounded text-white font-mono focus:border-blue-500">
+        </td>
+        <td class="p-2.5">
+          <input type="number" step="0.01" min="0.01" value="${item.cost}" data-idx="${idx}" class="sb-cost-input w-24 bg-slate-950 border border-slate-700 px-1.5 py-0.5 rounded text-white font-mono focus:border-blue-500">
+        </td>
+        <td class="p-2.5 text-emerald-400 font-bold">${formatCurrency(livePrice)} ₺</td>
+        <td class="p-2.5 font-bold text-white">${formatCurrency(mVal)} ₺</td>
+        <td class="p-2.5 text-amber-300 font-bold">%${weight}</td>
+        <td class="p-2.5 text-center">
+          <button data-idx="${idx}" class="sb-del-btn text-rose-400 hover:text-rose-300 p-1 font-bold">✕</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // İnput dinleyicileri
+    tbody.querySelectorAll(".sb-lot-input").forEach((inp) => {
+      inp.addEventListener("input", (e) => {
+        const i = parseInt(e.target.getAttribute("data-idx"));
+        const val = parseFloat(e.target.value) || 1;
+        const current = getActivePortfolioHoldings();
+        if (current[i]) {
+          current[i].lot = val;
+          saveActivePortfolioHoldings(current);
+          renderTable();
+        }
+      });
+    });
+
+    tbody.querySelectorAll(".sb-cost-input").forEach((inp) => {
+      inp.addEventListener("input", (e) => {
+        const i = parseInt(e.target.getAttribute("data-idx"));
+        const val = parseFloat(e.target.value) || 0.01;
+        const current = getActivePortfolioHoldings();
+        if (current[i]) {
+          current[i].cost = val;
+          saveActivePortfolioHoldings(current);
+          renderTable();
+        }
+      });
+    });
+
+    tbody.querySelectorAll(".sb-del-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const i = parseInt(e.target.getAttribute("data-idx"));
+        const current = getActivePortfolioHoldings();
+        if (current[i]) {
+          current.splice(i, 1);
+          saveActivePortfolioHoldings(current);
+          renderTable();
+        }
+      });
+    });
+
+    recalculatePortfolioMetrics();
+  }
+
+  if (openBtn) {
+    openBtn.addEventListener("click", () => {
+      renderTable();
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    });
+  }
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+  });
+
+  if (saveBtn) {
+    saveBtn.addEventListener("click", () => {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      recalculatePortfolioMetrics();
+      if (typeof loadTicker === "function") loadTicker(currentTicker);
+    });
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      resetActivePortfolioHoldings();
+      renderTable();
+    });
+  }
+
+  if (exportBtn) {
+    exportBtn.addEventListener("click", () => {
+      const holdings = getActivePortfolioHoldings();
+      let md = "| Varlık Kodu | Varlık Adı | Lot | Maliyet (₺) | Canlı Fiyat (₺) | Değer (₺) |\n";
+      md += "| :--- | :--- | :--- | :--- | :--- | :--- |\n";
+      holdings.forEach((h) => {
+        const p = (FALLBACK_DATA[h.ticker] && FALLBACK_DATA[h.ticker].price) || h.cost;
+        md += `| ${h.ticker} | ${h.name || h.ticker} | ${h.lot} | ${formatCurrency(h.cost)} | ${formatCurrency(p)} | ${formatCurrency(p * h.lot)} |\n`;
+      });
+      navigator.clipboard.writeText(md).then(() => {
+        exportBtn.innerHTML = "<span>✅</span> Panoya Kopyalandı!";
+        setTimeout(() => (exportBtn.innerHTML = "<span>📋</span> AtakanOS'a Kopyala"), 2000);
+      });
+    });
+  }
+
+  if (addBtn) {
+    addBtn.addEventListener("click", () => {
+      const tickerInput = document.getElementById("sb-add-ticker");
+      const lotInput = document.getElementById("sb-add-lot");
+      const costInput = document.getElementById("sb-add-cost");
+
+      const tick = tickerInput?.value.trim().toUpperCase().replace(".IS", "");
+      const lot = parseFloat(lotInput?.value) || 1;
+      const cost = parseFloat(costInput?.value) || (FALLBACK_DATA[tick]?.price || 100.0);
+
+      if (tick) {
+        const holdings = getActivePortfolioHoldings();
+        const existing = holdings.find((h) => h.ticker === tick);
+        if (existing) {
+          existing.lot += lot;
+        } else {
+          holdings.push({
+            ticker: tick,
+            name: FALLBACK_DATA[tick]?.name || tick,
+            lot: lot,
+            cost: cost,
+            sector: FALLBACK_DATA[tick]?.sector || "BIST Şirketi"
+          });
+        }
+        saveActivePortfolioHoldings(holdings);
+        if (tickerInput) tickerInput.value = "";
+        if (lotInput) lotInput.value = "";
+        if (costInput) costInput.value = "";
+        renderTable();
+      }
+    });
   }
 }

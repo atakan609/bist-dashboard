@@ -39,6 +39,9 @@
   <!-- Chart.js CDN (Portföy Dağılım Pastaları için) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <!-- Supabase JS Client CDN (Realtime WebSocket Engine) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     /* Özel Kaydırma Çubuğu */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -101,11 +104,14 @@
         </form>
       </div>
 
-      <!-- Sağ: Mikro Makro Şerit & Canlı Rozeti -->
-      <div class="flex items-center gap-2.5 text-[11px] font-mono shrink-0">
+      <!-- Sağ: Mikro Makro Şerit, Portföy Masası & Canlı Rozeti -->
+      <div class="flex items-center gap-2 text-[11px] font-mono shrink-0">
+        <button id="open-sandbox-btn" class="px-2.5 py-1 rounded-lg bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/30 font-bold text-xs transition flex items-center gap-1 shadow-sm">
+          <span>⚙️</span> <span class="hidden sm:inline">Portföy Masası</span>
+        </button>
         <div class="hidden lg:flex items-center gap-1.5 text-slate-300">
           <span class="text-slate-500">Portföy:</span>
-          <span id="header-portfolio-val" class="font-bold text-emerald-400">4.583 ₺</span>
+          <span id="header-portfolio-val" class="font-bold text-emerald-400">4.580 ₺</span>
         </div>
         <div class="hidden md:flex items-center gap-1 text-slate-300">
           <span class="text-slate-500">USD:</span>
@@ -115,14 +121,108 @@
           <span class="text-slate-500">BIST100:</span>
           <span id="macro-xu100" class="font-bold text-emerald-400">9.285</span>
         </div>
-        <div class="flex items-center gap-1" id="market-status">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span class="text-[9px] text-slate-400">Canlı</span>
+        <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800" id="market-status">
+          <span id="realtime-status-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="realtime-status-label" class="text-[9px] text-emerald-400 font-mono">Realtime</span>
         </div>
       </div>
 
     </div>
   </header>
+
+  <!-- İnteraktif Portföy Düzenleme & Simülasyon Masası Modalı -->
+  <div id="sandbox-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6 transition-opacity">
+    <div class="bg-[#10172a] border border-slate-700/80 rounded-2xl w-full max-w-4xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- Modal Başlığı -->
+      <div class="px-5 py-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-900/60">
+        <div class="flex items-center gap-2.5">
+          <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-mono font-bold text-xs border border-blue-500/30">SANDBOX</span>
+          <h3 class="font-bold text-sm sm:text-base text-white">İnteraktif Portföy & Varlık Masası</h3>
+        </div>
+        <button id="close-sandbox-btn" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal İçeriği (Kaydırılabilir) -->
+      <div class="p-5 overflow-y-auto space-y-5 text-xs font-sans text-slate-300 leading-relaxed">
+        
+        <!-- Canlı Özet KPI Şeridi -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+            <span class="text-[10px] text-slate-500 block">TOPLAM PORTFÖY</span>
+            <span id="sb-total-val" class="text-base sm:text-lg font-bold text-emerald-400">4.580,19 ₺</span>
+          </div>
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+            <span class="text-[10px] text-slate-500 block">TOPLAM MALİYET</span>
+            <span id="sb-total-cost" class="text-base sm:text-lg font-bold text-slate-200">4.580,19 ₺</span>
+          </div>
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+            <span class="text-[10px] text-slate-500 block">NET KÂR / ZARAR</span>
+            <span id="sb-net-pl" class="text-base sm:text-lg font-bold text-emerald-400">+0,00 ₺ (%0.0)</span>
+          </div>
+          <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+            <span class="text-[10px] text-slate-500 block">VARLIK SAYISI</span>
+            <span id="sb-asset-count" class="text-base sm:text-lg font-bold text-blue-400">5 Varlık</span>
+          </div>
+        </div>
+
+        <!-- Varlık Listesi Tablosu (Editable) -->
+        <div class="border border-slate-800 rounded-xl overflow-hidden bg-slate-900/40">
+          <div class="p-3 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between">
+            <span class="font-bold text-slate-200 text-xs">Portföy Varlıkları & Lot Yönetimi</span>
+            <span class="text-[10px] text-slate-500 font-mono">Supabase Canlı Fiyatlarıyla Çarpılır</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left font-mono text-xs">
+              <thead class="bg-slate-950 text-slate-400 text-[11px] border-b border-slate-800">
+                <tr>
+                  <th class="p-2.5">Kod</th>
+                  <th class="p-2.5">Varlık Adı</th>
+                  <th class="p-2.5 w-24">Lot</th>
+                  <th class="p-2.5 w-28">Maliyet (₺)</th>
+                  <th class="p-2.5">Canlı Fiyat</th>
+                  <th class="p-2.5">Piyasa Değeri</th>
+                  <th class="p-2.5">Pay (%)</th>
+                  <th class="p-2.5 text-center">Sil</th>
+                </tr>
+              </thead>
+              <tbody id="sb-table-body" class="divide-y divide-slate-800/60">
+                <!-- Dinamik Varlık Satırları -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Yeni Varlık Ekleme Formu -->
+        <div class="bg-slate-900/60 border border-slate-800 p-3.5 rounded-xl flex flex-wrap items-center gap-3 font-mono">
+          <span class="text-xs font-bold text-blue-400 shrink-0">+ Varlık Ekle:</span>
+          <input id="sb-add-ticker" type="text" placeholder="KOD (örn: THYAO)" class="bg-slate-950 border border-slate-700 px-2 py-1 rounded text-xs text-white uppercase w-32 focus:outline-none focus:border-blue-500">
+          <input id="sb-add-lot" type="number" placeholder="Lot" min="1" class="bg-slate-950 border border-slate-700 px-2 py-1 rounded text-xs text-white w-20 focus:outline-none focus:border-blue-500">
+          <input id="sb-add-cost" type="number" step="0.01" placeholder="Maliyet ₺" class="bg-slate-950 border border-slate-700 px-2 py-1 rounded text-xs text-white w-28 focus:outline-none focus:border-blue-500">
+          <button id="sb-add-btn" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded font-bold text-xs transition">Ekle</button>
+        </div>
+
+      </div>
+
+      <!-- Modal Alt Butonları -->
+      <div class="px-5 py-3.5 border-t border-slate-800 bg-slate-900/60 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+        <div class="flex items-center gap-2">
+          <button id="sb-reset-btn" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 transition flex items-center gap-1">
+            <span>🔄</span> 4+1 Kütüğe Sıfırla
+          </button>
+          <button id="sb-export-btn" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 transition flex items-center gap-1">
+            <span>📋</span> AtakanOS'a Kopyala
+          </button>
+        </div>
+        <button id="sb-save-btn" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded shadow-lg transition flex items-center gap-1.5">
+          <span>💾</span> Kaydet & Dashboard'a Uygula
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <!-- Tam Ekran Analiz & Rapor Okuma Modalı -->
   <div id="report-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6 transition-opacity">
