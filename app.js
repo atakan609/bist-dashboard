@@ -16,6 +16,40 @@ let targetPortfolioDoughnut = null;
 let currentTicker = "THYAO";
 
 /**
+ * Borsa İstanbul Seans Saati Kontrolü (TSİ / UTC+3)
+ * Hafta içi (Pazartesi-Cuma) 09:55 - 18:15 arası seans açıktır.
+ */
+function isMarketOpen() {
+  const now = new Date();
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+  const trDate = new Date(utc + 3600000 * 3);
+  const day = trDate.getDay(); // 0: Pazar, 6: Cumartesi
+  if (day === 0 || day === 6) return false;
+  const hour = trDate.getHours();
+  const minute = trDate.getMinutes();
+  const timeVal = hour * 60 + minute;
+  return timeVal >= 595 && timeVal <= 1095; // 09:55 - 18:15
+}
+
+function updateMarketStatusUI() {
+  const dot = document.getElementById("realtime-status-dot");
+  const lbl = document.getElementById("realtime-status-label");
+  const open = isMarketOpen();
+
+  if (dot) {
+    dot.className = open
+      ? "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"
+      : "w-1.5 h-1.5 rounded-full bg-amber-400";
+  }
+  if (lbl) {
+    lbl.textContent = open ? "Canlı (WS)" : "Piyasa Kapalı (10:00-18:10)";
+    lbl.className = open
+      ? "text-[11px] text-emerald-400 font-mono font-medium"
+      : "text-[11px] text-amber-400 font-mono font-medium";
+  }
+}
+
+/**
  * Canlı Dijital Borsa Saati (İstanbul / TR)
  * Her saniye (#live-clock) elementini saniyesi saniyesine canlı günceller
  */
@@ -26,6 +60,7 @@ function startLiveClock() {
     if (clockEl) {
       clockEl.textContent = now.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
     }
+    updateMarketStatusUI();
   }
   tick();
   setInterval(tick, 1000);
@@ -1817,9 +1852,11 @@ function handleRealtimeQuoteUpdate(newQuote) {
     window.TICKER_DATA[ticker] = { ...(window.TICKER_DATA[ticker] || {}), price, change_pct: chg };
   }
 
-  // WebSocket canlı akış rozetini gerçek gelen veri saatiyle güncelle
+  // WebSocket canlı akış rozetini seans durumuna göre güncelle
+  updateMarketStatusUI();
+  const open = isMarketOpen();
   const marketStatus = document.getElementById("market-status");
-  if (marketStatus) {
+  if (marketStatus && open) {
     let tickBadge = marketStatus.querySelector(".update-time-badge");
     const nowTime = new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
     if (!tickBadge) {
@@ -1830,13 +1867,15 @@ function handleRealtimeQuoteUpdate(newQuote) {
     tickBadge.textContent = `⚡ ${nowTime}`;
   }
 
-  // Eğer açık olan hisse ise canlı ekranda flaşla
+  // Eğer açık olan hisse ise canlı ekranda güncelle (yalnızca seans açıksa flaşla)
   if (currentTicker === ticker) {
     const pEl = document.getElementById("stock-price");
     if (pEl) {
       pEl.textContent = `${formatCurrency(price)} ₺`;
-      pEl.classList.add(chg >= 0 ? "text-emerald-400" : "text-rose-400");
-      setTimeout(() => pEl.classList.remove("text-emerald-400", "text-rose-400"), 800);
+      if (open) {
+        pEl.classList.add(chg >= 0 ? "text-emerald-400" : "text-rose-400");
+        setTimeout(() => pEl.classList.remove("text-emerald-400", "text-rose-400"), 800);
+      }
     }
     const chgEl = document.getElementById("stock-change");
     if (chgEl) {

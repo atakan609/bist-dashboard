@@ -219,6 +219,21 @@ def get_worker_status() -> None:
     logger.info("Worker is currently STOPPED.")
 
 
+def is_bist_open() -> bool:
+    """Checks if Borsa Istanbul (BIST) equity market is currently in an active trading session.
+    Active Hours: Monday - Friday, 09:55 - 18:15 (Turkey Time, UTC+3).
+    Closed on Weekends and outside session hours.
+    """
+    tz_tr = datetime.timezone(datetime.timedelta(hours=3))
+    now_tr = datetime.datetime.now(tz_tr)
+    # Weekends (Saturday=5, Sunday=6)
+    if now_tr.weekday() >= 5:
+        return False
+    open_time = now_tr.replace(hour=9, minute=55, second=0, microsecond=0)
+    close_time = now_tr.replace(hour=18, minute=15, second=0, microsecond=0)
+    return open_time <= now_tr <= close_time
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Supabase BIST Realtime Feeder")
     parser.add_argument("--stream", action="store_true", help="Run continuous streaming loop")
@@ -252,8 +267,12 @@ def main() -> None:
     try:
         while True:
             try:
-                run_cycle()
-                time.sleep(args.interval)
+                if is_bist_open():
+                    run_cycle()
+                    time.sleep(args.interval)
+                else:
+                    logger.info("BIST piyasası kapalı (Seans: Hafta içi 10:00 - 18:10). Uyku modunda bekleniyor (300s)...")
+                    time.sleep(300)
             except KeyboardInterrupt:
                 logger.info("Stream worker stopped by user.")
                 break
