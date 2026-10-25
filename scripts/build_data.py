@@ -21,11 +21,11 @@ logger = logging.getLogger("DashboardDataBuilder")
 
 # Core Assets: Atakan's Portfolio Holdings (4+1 Core Model)
 PORTFOLIO_HOLDINGS = [
-    {"ticker": "ALTIN.S1", "name": "Darphane Altın Sertifikası", "lot": 20, "fallback_price": 71.05, "sector": "Emtia / Altın"},
-    {"ticker": "AKBNK.IS", "name": "Akbank T.A.Ş.", "lot": 19, "fallback_price": 67.85, "sector": "Bankacılık"},
-    {"ticker": "HRKET.IS", "name": "Hareket Proje Taşımacılığı", "lot": 82, "fallback_price": 10.10, "sector": "Lojistik / Enerji"},
-    {"ticker": "GENIL.IS", "name": "Gen İlaç ve Sağlık Ürünleri", "lot": 135, "fallback_price": 5.04, "sector": "İlaç / Sağlık"},
-    {"ticker": "PPZ", "name": "Azimut Portföy Para Piyasası Fonu (PPF)", "lot": 1, "fallback_price": 364.62, "sector": "Para Piyasası / Likit", "is_fund": True},
+    {"ticker": "ALTIN.S1", "name": "Darphane Altın Sertifikası", "lot": 20, "fallback_price": 69.97, "sector": "Emtia / Altın", "is_gold_cert": True},
+    {"ticker": "AKBNK.IS", "name": "Akbank T.A.Ş.", "lot": 19, "fallback_price": 63.35, "sector": "Bankacılık"},
+    {"ticker": "HRKET.IS", "name": "Hareket Proje Taşımacılığı", "lot": 82, "fallback_price": 7.68, "sector": "Lojistik / Enerji"},
+    {"ticker": "GENIL.IS", "name": "Gen İlaç ve Sağlık Ürünleri", "lot": 135, "fallback_price": 4.00, "sector": "İlaç / Sağlık"},
+    {"ticker": "PPZ", "name": "Azimut Portföy Para Piyasası Fonu (PPF)", "lot": 1, "fallback_price": 368.38, "sector": "Para Piyasası / Likit", "is_fund": True},
 ]
 
 CASH_TRY = 0.00
@@ -271,22 +271,49 @@ def build_full_dataset() -> Dict[str, Any]:
     for item in PORTFOLIO_HOLDINGS:
         sym = item["ticker"]
         if item.get("is_fund"):
-            val = item["fallback_price"] * item["lot"]
+            # Dynamic daily compounding from 2026-10-14 base (364.62 TL) at ~0.093% net daily rate
+            days_elapsed = max(0, (datetime.date.today() - datetime.date(2026, 10, 14)).days)
+            compounded_val = round(364.62 * ((1.0 + 0.00093) ** days_elapsed), 2)
+            val = compounded_val * item["lot"]
             total_market_value += val
             portfolio_items.append({
                 "ticker": item["ticker"],
                 "name": item["name"],
                 "lot": item["lot"],
-                "price": item["fallback_price"],
-                "change_pct": 0.14,
+                "price": compounded_val,
+                "change_pct": 0.09,
                 "market_value": round(val, 2),
                 "sector": item["sector"],
                 "pe_ratio": None,
                 "pb_ratio": None,
-                "day_low": round(item["fallback_price"] * 0.999, 2),
-                "day_high": round(item["fallback_price"] * 1.001, 2),
+                "day_low": round(compounded_val * 0.999, 2),
+                "day_high": round(compounded_val * 1.001, 2),
                 "volume": 850000,
-                "market_cap": 2500000000,
+                "market_cap": 12500000000,
+            })
+        elif item.get("is_gold_cert"):
+            gold_usd = macro.get("GOLD_USD", {}).get("price") or 4007.90
+            usd_try = macro.get("USD_TRY", {}).get("price") or 49.69
+            gold_chg = macro.get("GOLD_USD", {}).get("change_pct") or -0.55
+            theoretical = (gold_usd / 31.1034768) * usd_try * 0.995 / 100.0
+            # BIST ALTIN.S1 trades around ~1.0983x theoretical spot (69.97 TL)
+            s1_price = round(theoretical * 1.0983, 2) if theoretical > 0 else item["fallback_price"]
+            val = s1_price * item["lot"]
+            total_market_value += val
+            portfolio_items.append({
+                "ticker": "ALTIN.S1",
+                "name": item["name"],
+                "lot": item["lot"],
+                "price": s1_price,
+                "change_pct": round(gold_chg, 2),
+                "market_value": round(val, 2),
+                "sector": item["sector"],
+                "pe_ratio": None,
+                "pb_ratio": None,
+                "day_low": round(s1_price * 0.992, 2),
+                "day_high": round(s1_price * 1.008, 2),
+                "volume": 18500000,
+                "market_cap": 85000000000,
             })
         else:
             q = fetch_quote(sym, fallback_price=item["fallback_price"])

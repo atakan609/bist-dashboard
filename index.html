@@ -93,19 +93,19 @@
           <!-- Canlı Portföy Özeti -->
           <div class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-slate-300 shadow-sm">
             <span class="text-slate-500 text-[11px]">Portföy:</span>
-            <span id="header-portfolio-val" class="font-bold text-emerald-400 text-xs sm:text-sm">4.580,19 ₺</span>
+            <span id="header-portfolio-val" class="font-bold text-emerald-400 text-xs sm:text-sm">4.141,21 ₺</span>
           </div>
 
           <!-- Makro Kurlar -->
           <div class="hidden md:flex items-center gap-2.5 px-2.5 py-1 rounded-lg bg-slate-900/50 border border-slate-800/80 text-slate-300">
             <div class="flex items-center gap-1">
               <span class="text-slate-500 text-[10px]">USD:</span>
-              <span id="macro-usd" class="font-bold text-amber-400">34.25</span>
+              <span id="macro-usd" class="font-bold text-amber-400">49.69</span>
             </div>
             <span class="text-slate-700">|</span>
             <div class="flex items-center gap-1">
               <span class="text-slate-500 text-[10px]">BIST100:</span>
-              <span id="macro-xu100" class="font-bold text-emerald-400">9.285</span>
+              <span id="macro-xu100" class="font-bold text-emerald-400">11.117</span>
             </div>
           </div>
 
@@ -484,15 +484,15 @@
           <div class="space-y-1">
             <div class="flex items-center gap-2">
               <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-xs font-bold font-mono border border-emerald-500/30">DURUM</span>
-              <h3 class="text-sm font-bold text-white">4.583,37 TL Portföy Durumu: 4+1 Konsolide Çekirdek Model İcrası Tamamlandı</h3>
+              <h3 id="portfolio-banner-title" class="text-sm font-bold text-white">4.141,21 TL Portföy Durumu: 4+1 Konsolide Çekirdek Model (25 Ekim 2026)</h3>
             </div>
             <p class="text-xs text-slate-300">
-              5 toksik tahta (SASA, PEKGY, MANAS, INFO, HDFGS) tamamen tasfiye edildi. Sermaye 4 ana büyüme sütunu (ALTIN.S1, AKBNK, HRKET, GENIL) ve PPZ likit faiz kalkanına kilitlendi.
+              5 toksik tahta (SASA, PEKGY, MANAS, INFO, HDFGS — ortalama -%34 çöküşten kaçınıldı) tasfiye edildi. Sermaye 4 ana büyüme sütunu (ALTIN.S1, AKBNK, HRKET, GENIL) ve PPZ likit faiz kalkanında.
             </p>
           </div>
           <div class="flex items-center gap-2">
             <span class="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30 text-center whitespace-nowrap">
-              Atlas Kararı: %100 Konsolide & Dengeli
+              Atlas Kararı: %100 Konsolide & Korunaklı
             </span>
           </div>
         </div>
@@ -505,23 +505,23 @@
             <div class="w-full flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
               <div>
                 <h4 class="text-xs font-bold text-slate-200">Canlı Dağılım: 4 Varlık + PPZ Fonu</h4>
-                <p class="text-[11px] text-slate-400">4.583,37 TL • HHI = 0.258</p>
+                <p id="portfolio-sub-hhi" class="text-[11px] text-slate-400">4.141,21 TL • HHI = 0.246</p>
               </div>
               <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono">Dengeli Dağılım</span>
             </div>
             <div class="w-60 h-60 relative my-2">
               <canvas id="current-portfolio-chart"></canvas>
             </div>
-            <div class="w-full mt-3 space-y-1 text-xs font-mono">
+            <div id="portfolio-live-breakdown" class="w-full mt-3 space-y-1 text-xs font-mono">
               <div class="flex justify-between text-slate-400 text-[11px] border-b border-slate-800/60 pb-1">
                 <span>Varlık (Kod)</span>
                 <span>Tutar (TL) / Pay (%)</span>
               </div>
-              <div class="flex justify-between text-amber-300"><span>ALTIN.S1 (Darphane Altın)</span><strong>1.421,00 TL (%31,0)</strong></div>
-              <div class="flex justify-between text-blue-300"><span>AKBNK (BIST 30 Banka)</span><strong>1.289,15 TL (%28,1)</strong></div>
-              <div class="flex justify-between text-emerald-300"><span>HRKET (Proje Lojistiği)</span><strong>828,20 TL (%18,1)</strong></div>
-              <div class="flex justify-between text-cyan-300"><span>GENIL (İlaç & Biyoteknoloji)</span><strong>680,40 TL (%14,8)</strong></div>
-              <div class="flex justify-between text-slate-300"><span>PPZ FONU (Likit Nema Tamponu)</span><strong>364,62 TL (%8,0)</strong></div>
+              <div class="flex justify-between text-amber-300"><span>ALTIN.S1 (Darphane Altın)</span><strong>1.399,60 TL (%33,8)</strong></div>
+              <div class="flex justify-between text-blue-300"><span>AKBNK (BIST 30 Banka)</span><strong>1.203,65 TL (%29,1)</strong></div>
+              <div class="flex justify-between text-emerald-300"><span>HRKET (Proje Lojistiği)</span><strong>629,76 TL (%15,2)</strong></div>
+              <div class="flex justify-between text-cyan-300"><span>GENIL (İlaç & Biyoteknoloji)</span><strong>540,00 TL (%13,0)</strong></div>
+              <div class="flex justify-between text-slate-300"><span>PPZ FONU (Likit Nema Tamponu)</span><strong>368,38 TL (%8,9)</strong></div>
             </div>
           </div>
 
@@ -661,6 +661,6 @@
   </footer>
 
   <!-- İstemci Mantığı -->
-  <script src="app.js?v=20261017_0230"></script>
+  <script src="app.js?v=20261025_2008"></script>
 </body>
 </html>

@@ -321,42 +321,42 @@ const FALLBACK_DATA = {
     ticker: "PPZ",
     name: "Azimut Portföy Para Piyasası Fonu (PPF)",
     sector: "Para Piyasası / Likit Fon",
-    price: 364.62,
-    change: 0.50,
-    change_percent: 0.14,
+    price: 368.38,
+    change: 0.34,
+    change_percent: 0.09,
     currency: "TRY",
-    day_low: 364.00,
-    day_high: 365.00,
+    day_low: 368.00,
+    day_high: 368.75,
     volume: 15000000,
     market_cap: 12500000000,
     pe_ratio: null,
     pb_ratio: null,
     ev_ebitda: null,
-    dividend_yield: 50.0,
-    dcf_fair_value: 364.62,
+    dividend_yield: 45.64,
+    dcf_fair_value: 368.38,
     margin_of_safety: 0.0,
-    wacc: 0.50,
-    verdict: "Likit Nema / Günlük %50 Bileşik Getiri Kalkanı",
+    wacc: 0.36,
+    verdict: "Likit Nema / Günlük Bileşik Getiri Kalkanı (+%45,6 Yıllık)",
     bull_thesis: [
-      "TCMB gecelik repo faizi ile risksiz günlük bileşik getiri birikimi.",
-      "BIST düşüşlerinde hisse almak için anında harcanabilir likidite tamponu.",
+      "TCMB gecelik repo faizi ile risksiz günlük bileşik getiri birikimi (14 Ekim'den bugüne +3,76 TL net artış).",
+      "BIST düşüşlerinde dipten hisse almak için T+0 anında harcanabilir likidite tamponu.",
       "Sıfır sermaye kaybı ve sıfır piyasa volatilitesi."
     ],
     bear_thesis: [
-      "TCMB faiz indirim döngüsünde getiri marjında kademeli daralma.",
-      "Yüksek enflasyon ortamında uzun vadeli hisse senedi kadar reel büyüme sunmaması."
+      "TCMB 22 Ekim 100 bp faiz indirimi (%36) sonrası gecelik getiri marjında kademeli daralma.",
+      "Uzun vadeli hisse senedi rallilerinde fırsat maliyeti."
     ]
   },
   "ALTIN.S1": {
     ticker: "ALTIN.S1",
     name: "Darphane Altın Sertifikası (BIST)",
     sector: "Emtia & Koruma",
-    price: 71.05,
-    change: 0.45,
-    change_percent: 0.64,
+    price: 69.98,
+    change: -0.38,
+    change_percent: -0.55,
     currency: "TRY",
-    day_low: 70.80,
-    day_high: 71.60,
+    day_low: 69.40,
+    day_high: 70.55,
     volume: 18500000,
     market_cap: 85000000000,
     pe_ratio: null,
@@ -364,111 +364,107 @@ const FALLBACK_DATA = {
     ev_ebitda: null,
     dividend_yield: 0.0,
     dcf_fair_value: 78.50,
-    margin_of_safety: 10.49,
+    margin_of_safety: 12.17,
     wacc: 0.300,
-    verdict: "Tut / Enflasyon Kalkanı (%30 Hedef Ağırlık, Makas Kontrolü)",
+    verdict: "Kuvvetli Tut / Portföyün Çelik Zırhı (%33,8 Ağırlık)",
     bull_thesis: [
-      "Borsa İstanbul nezdinde stopajsız (%0) ve saklama maliyetsiz fiziki külçe altına dönüşüm hakkı.",
-      "Enflasyon ve kur şoklarına karşı portföyün en güçlü savunma çıpası (1.421 TL gerçekleşen | %31).",
-      "Küresel faiz indirim döngüsünde ons altın ve jeopolitik risk priminden doğrudan faydalanma."
+      "BIST satış dalgasında portföyün değerini koruyan 1 numaralı savunma çıpası (1.399,60 TL | %33,8).",
+      "Ons altın (4.007 $) ve USD/TRY (49,69) ikili çarpanıyla TL devalüasyon kalkanı.",
+      "Borsa İstanbul nezdinde stopajsız (%0) ve saklama maliyetsiz fiziki külçe altına dönüşüm hakkı."
     ],
     bear_thesis: [
-      "Fiziki spot altına kıyasla zaman zaman oluşan %30-%60 prim makası anomalisi.",
-      "Prim makasının sert kapandığı dönemlerde sertifika fiyatının düzeltme riski."
+      "Fiziki spot altına (63,71 TL) kıyasla oluşan ~%9,8 BIST sertifika prim makası.",
+      "Küresel ons altın kâr realizasyonlarında kısa vadeli yatay seyir."
     ]
   },
   "AKBNK": {
     ticker: "AKBNK",
     name: "Akbank T.A.Ş.",
     sector: "Bankacılık (BIST 30)",
-    price: 67.85,
-    change: 1.40,
-    change_percent: 2.11,
+    price: 63.35,
+    change: -1.45,
+    change_percent: -2.24,
     currency: "TRY",
-    day_low: 67.20,
-    day_high: 68.90,
-    volume: 42100000,
-    market_cap: 352820000000,
-    pe_ratio: 4.60,
-    pb_ratio: 1.05,
+    day_low: 60.40,
+    day_high: 65.10,
+    volume: 201036685,
+    market_cap: 329420000000,
+    pe_ratio: 4.93,
+    pb_ratio: 1.01,
     ev_ebitda: 4.10,
     dividend_yield: 4.50,
     dcf_fair_value: 86.00,
-    margin_of_safety: 26.75,
+    margin_of_safety: 35.75,
     wacc: 0.380,
-    verdict: "Kuvvetli Al / 11,45 Mr TL Temettü & %19,26 SYR (%25 Hedef)",
+    verdict: "Kuvvetli Al / PD/DD 1.01x Defter Değerinde & Faiz İndirimi Lokomotifi",
     bull_thesis: [
-      "Sektör lideri Sermaye Yeterlilik Rasyosu (%19,26 SYR) ve rekor 11,45 Milyar TL nakit temettü.",
-      "Dezenflasyon sürecinde mevduat maliyetlerinin gevşemesiyle Net Faiz Marjında (NIM) +%2,5 toparlanma.",
-      "F/K 4.60x ve PD/DD 1.05x çarpanlarıyla gelişmekte olan piyasaların en ucuz bankalarından biri.",
-      "Atlas 4+1 Modelinde 1.289 TL (%28,1) pozisyon ile ana omurga lokomotifi."
+      "TCMB'nin 22 Ekim faiz indirimi (%36) ile başlayan döngüde Net Faiz Marjı (NIM) en hızlı genişleyecek BIST 30 bankası.",
+      "PD/DD 1.01x (tam defter değerinde) ve F/K 4.93x ile tarihsel dip çarpan iskontosu.",
+      "Sektör lideri Sermaye Yeterlilik Rasyosu (%19,26 SYR) ve rekor nakit temettü gücü."
     ],
     bear_thesis: [
-      "Sıkı para politikasında yüksek TL mevduat maliyetlerinin kısa vadeli marj baskısı.",
-      "Takipteki alacaklar (NPL) oranında ekonomik yavaşlamayla oluşabilecek artış.",
-      "TCMB makroihtiyati düzenlemelerinin getirdiği zorunlu karşılık yükleri."
+      "Faiz indirimi sonrası 'beklentiyi al, gerçeği sat' algoritmik satış dalgası.",
+      "MSCI Türkiye endeks dondurma kararı ve fon tasfiyesi haberlerinin yarattığı geçici yabancı çıkışı."
     ]
   },
   "HRKET": {
     ticker: "HRKET",
     name: "Hareket Proje Taşımacılığı ve Yük Mühendisliği",
     sector: "Sanayi & Proje Lojistiği",
-    price: 10.10,
-    change: 0.22,
-    change_percent: 2.23,
+    price: 7.68,
+    change: -0.92,
+    change_percent: -10.70,
     currency: "TRY",
-    day_low: 9.95,
-    day_high: 10.35,
-    volume: 6850000,
-    market_cap: 11408000000,
+    day_low: 7.68,
+    day_high: 8.50,
+    volume: 22646395,
+    market_cap: 12386304000,
     pe_ratio: 8.90,
-    pb_ratio: 2.15,
+    pb_ratio: 1.55,
     ev_ebitda: 7.20,
     dividend_yield: 1.20,
-    dcf_fair_value: 13.80,
-    margin_of_safety: 36.63,
-    wacc: 0.355,
-    verdict: "Kuvvetli Al / Dövizli RES Lojistiği & Küresel Backlog (%18 Hedef)",
+    dcf_fair_value: 11.40,
+    margin_of_safety: 48.44,
+    wacc: 0.385,
+    verdict: "Sabırla Tut / %1300 Bedelsiz Sonrası BofA Satış Baskısı (Panik Satışı Yapma)",
     bull_thesis: [
-      "Nordex (7,2M $) ve Umman Duqm RES (11,9M+ $) sözleşmeleriyle güçlü döviz nakit akışı.",
-      "Yurt içi kredi daralmasından bağımsız küresel ağır nakliyat ve rüzgar enerjisi santrali montaj pazarı.",
-      "Hareket Rüzgar Enerji iştirakiyle yenilenebilir enerji montajında uzmanlaşma.",
-      "Atlas kararıyla 828 TL (%18,1) ile 4+1 modelin 3. büyük büyüme ayağı."
+      "Operasyonel bozulma yok: Katar, BAE, Umman Duqm RES (11,9M+ $) ve Nordex (7,2M $) dövizli kontratları tam gaz devam ediyor.",
+      "Londra Heavy Lift Awards uluslararası ödülü ve döviz bazlı güçlü sipariş defteri (Backlog).",
+      "%1300 bedelsiz bölünme ve sığ tahta fon tasfiyesi kaynaklı sert düşüşte PD/DD 1.55x'e kadar geriledi."
     ],
     bear_thesis: [
-      "Küresel proje ertelemeleri ve rüzgar türbini tedarik zinciri aksamaları.",
-      "Yüksek akaryakıt ve sınır ötesi operasyonel lojistik maliyetleri."
+      "%1300 bedelsiz sermaye artırımı sonrası dolaşımdaki pay artışı ve BofA kaynaklı agresif algoritmik satış baskısı.",
+      "Genel BIST fon tasfiyesi kanun teklifi endişeleriyle yan tahtalarda yaşanan likidite kuraklığı."
     ]
   },
   "GENIL": {
     ticker: "GENIL",
     name: "Gen İlaç ve Sağlık Ürünleri",
     sector: "İlaç & Biyoteknoloji",
-    price: 5.04,
-    change: 0.08,
-    change_percent: 1.61,
+    price: 4.00,
+    change: -0.04,
+    change_percent: -0.99,
     currency: "TRY",
-    day_low: 4.95,
-    day_high: 5.15,
-    volume: 5120000,
-    market_cap: 22140000000,
-    pe_ratio: 9.40,
-    pb_ratio: 1.95,
+    day_low: 3.81,
+    day_high: 4.05,
+    volume: 60398997,
+    market_cap: 17961089024,
+    pe_ratio: 16.00,
+    pb_ratio: 1.38,
     ev_ebitda: 7.80,
     dividend_yield: 2.10,
-    dcf_fair_value: 6.85,
-    margin_of_safety: 35.91,
-    wacc: 0.340,
-    verdict: "Kuvvetli Al / Net Nakit Bilanço & Incyte Lisans Katalizörü (%15 Hedef)",
+    dcf_fair_value: 5.85,
+    margin_of_safety: 46.25,
+    wacc: 0.360,
+    verdict: "Tut / Şirket 2 Milyon Lot Geri Alımla Tahtayı Destekliyor",
     bull_thesis: [
-      "Net nakit pozisyonunda borçsuz bilanço; %50 politika faizinde sıfır finansman gideri yükü.",
-      "Biyofarmasötik devi Incyte ile Niktimvo & Opzelura için 5 yıllık münhasır lisans sözleşmesi.",
-      "Azerbaycan 'GEN Caucasus' fabrikasıyla Kafkasya ve Orta Asya pazarına doğrudan ihracat.",
-      "4+1 Modelinde +283 TL ilave takviye ile 726 TL (%15) hedef ağırlık."
+      "Şirket yönetimi düşüşe karşı KAP'a 4,91 TL ortalamayla 2.000.000 lot pay geri alımı bildirerek hisseye sahip çıktı.",
+      "Azerbaycan 'GEN Caucasus' üretim tesisi açılışı, Kazakistan ihaleleri ve Incyte (Niktimvo/Opzelura) 5 yıllık münhasır lisans anlaşması.",
+      "Net nakit pozisyonunda borçsuz bilanço ve PD/DD 1.38x defansif çarpan."
     ],
     bear_thesis: [
-      "Sağlık Bakanlığı ilaç fiyat kararnamesindeki Euro kuru iskonto baskısı.",
-      "Ruhsatlandırma ve klinik onay süreçlerindeki bürokratik vadeler."
+      "Eski YK üyesi Ali Göl'ün şahsi hukuki süreci ve istifasının (yerine Ömer Dinçer atandı) yarattığı geçici algı baskısı.",
+      "BIST genel satış dalgasında devre kesicilerle tetiklenen panik satışları."
     ]
   },
   "SASA": {
@@ -1815,7 +1811,47 @@ function recalculatePortfolioMetrics() {
   }
   if (sbCount) sbCount.textContent = `${holdings.length} Varlık`;
 
-  // 3. Portföy Pasta Grafiğini Güncelle
+  // 3. Portföy Pasta Grafiğini ve Alt Dağılım Tablosunu Güncelle
+  let hhiSum = 0;
+  holdings.forEach((p) => {
+    const pPrice = (FALLBACK_DATA[p.ticker] && FALLBACK_DATA[p.ticker].price) || p.cost;
+    const w = totalMarketVal > 0 ? (p.lot * pPrice) / totalMarketVal : 0;
+    hhiSum += w * w;
+  });
+
+  const bannerTitle = document.getElementById("portfolio-banner-title");
+  if (bannerTitle) {
+    const isPos = netPl >= 0;
+    bannerTitle.textContent = `${formatCurrency(totalMarketVal)} TL Portföy Durumu (${isPos ? "+" : ""}${formatCurrency(netPl)} TL / ${isPos ? "+" : ""}${netPlPct.toFixed(2)}%)`;
+  }
+
+  const subHhi = document.getElementById("portfolio-sub-hhi");
+  if (subHhi) {
+    subHhi.textContent = `${formatCurrency(totalMarketVal)} TL • Maliyet: ${formatCurrency(totalCostVal)} TL • HHI = ${hhiSum.toFixed(3)}`;
+  }
+
+  const breakdownEl = document.getElementById("portfolio-live-breakdown");
+  if (breakdownEl && holdings.length > 0) {
+    const colorClasses = ["text-amber-300", "text-blue-300", "text-emerald-300", "text-cyan-300", "text-purple-300", "text-slate-300"];
+    const rowsHtml = holdings.map((p, idx) => {
+      const pPrice = (FALLBACK_DATA[p.ticker] && FALLBACK_DATA[p.ticker].price) || p.cost;
+      const mVal = p.lot * pPrice;
+      const cVal = p.lot * p.cost;
+      const plPct = cVal > 0 ? ((mVal - cVal) / cVal) * 100 : 0;
+      const weight = totalMarketVal > 0 ? (mVal / totalMarketVal) * 100 : 0;
+      const col = colorClasses[idx % colorClasses.length];
+      const plStr = `${plPct >= 0 ? "+" : ""}${plPct.toFixed(1)}%`;
+      return `<div class="flex justify-between ${col}"><span>${p.ticker} (${p.lot} Lot • ${formatCurrency(pPrice)} ₺)</span><strong>${formatCurrency(mVal)} TL (%${weight.toFixed(1)} | ${plStr})</strong></div>`;
+    }).join("");
+    breakdownEl.innerHTML = `
+      <div class="flex justify-between text-slate-400 text-[11px] border-b border-slate-800/60 pb-1">
+        <span>Varlık (Lot • Son Fiyat)</span>
+        <span>Değer / Pay / K-Z (%)</span>
+      </div>
+      ${rowsHtml}
+    `;
+  }
+
   if (currentPortfolioDoughnut && holdings.length > 0) {
     currentPortfolioDoughnut.data.labels = holdings.map((p) => {
       const pPrice = (FALLBACK_DATA[p.ticker] && FALLBACK_DATA[p.ticker].price) || p.cost;
@@ -1947,17 +1983,25 @@ function handleRealtimeQuoteUpdate(newQuote) {
   recalculatePortfolioMetrics();
 }
 
-// Supabase Realtime WebSocket Kanalını Başlat
-function initSupabaseRealtime() {
+// Supabase Realtime WebSocket Kanalını Başlat & İlk Anlık Veriyi Çek
+async function initSupabaseRealtime() {
   if (!supabaseClient) {
-    const dot = document.getElementById("realtime-status-dot");
     const lbl = document.getElementById("realtime-status-label");
     if (lbl) lbl.textContent = "Offline";
     return;
   }
 
   try {
-    const channel = supabaseClient
+    // 1. Sayfa açılışında Supabase bist_quotes tablosundaki en son fiyatları çek
+    const { data: initialQuotes, error } = await supabaseClient
+      .from("bist_quotes")
+      .select("*");
+    if (!error && Array.isArray(initialQuotes) && initialQuotes.length > 0) {
+      initialQuotes.forEach((q) => handleRealtimeQuoteUpdate(q));
+    }
+
+    // 2. Canlı WebSocket (postgres_changes) kanalına abone ol
+    supabaseClient
       .channel("bist-realtime-public")
       .on(
         "postgres_changes",
@@ -1969,12 +2013,11 @@ function initSupabaseRealtime() {
         }
       )
       .subscribe((status) => {
-        const dot = document.getElementById("realtime-status-dot");
-        const lbl = document.getElementById("realtime-status-label");
         if (status === "SUBSCRIBED") {
-          if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse";
-          if (lbl) lbl.textContent = "Canlı (WS)";
+          updateMarketStatusUI();
         } else {
+          const dot = document.getElementById("realtime-status-dot");
+          const lbl = document.getElementById("realtime-status-label");
           if (dot) dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400";
           if (lbl) lbl.textContent = status;
         }

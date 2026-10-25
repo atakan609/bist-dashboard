@@ -75,7 +75,7 @@ def fetch_single_quote(ticker: str, sym: str) -> Optional[Dict[str, Any]]:
 
 def fetch_gold_certificate() -> Dict[str, Any]:
     """Calculates ALTIN.S1 certificate price based on GC=F (Gold USD) and TRY=X (USD/TRY)."""
-    fallback_price = 71.05
+    fallback_price = 69.97
     try:
         gold_fast = yf.Ticker("GC=F").fast_info
         try_fast = yf.Ticker("TRY=X").fast_info
@@ -84,9 +84,9 @@ def fetch_gold_certificate() -> Dict[str, Any]:
         usd_try = try_fast.last_price or try_fast.previous_close
 
         if gold_usd and usd_try:
-            # 1 oz = 31.1034768g, 0.01g gold * 2.44 BIST certificate multiplier
+            # 1 oz = 31.1034768g, 0.01g gold * 1.0983 BIST certificate premium multiplier
             theoretical = (gold_usd / 31.1034768) * usd_try * 0.995 / 100.0
-            price = round(theoretical * 2.44, 2)
+            price = round(theoretical * 1.0983, 2)
             prev_gold = gold_fast.previous_close or gold_usd
             chg = ((gold_usd - prev_gold) / prev_gold * 100.0) if prev_gold else 0.0
             return {
@@ -94,7 +94,7 @@ def fetch_gold_certificate() -> Dict[str, Any]:
                 "name": "Darphane Altın Sertifikası",
                 "price": price,
                 "change_pct": round(chg, 2),
-                "day_low": round(price * 0.995, 2),
+                "day_low": round(price * 0.992, 2),
                 "day_high": round(price * 1.008, 2),
                 "volume": 18500000,
                 "updated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
@@ -106,23 +106,25 @@ def fetch_gold_certificate() -> Dict[str, Any]:
         "ticker": "ALTIN.S1",
         "name": "Darphane Altın Sertifikası",
         "price": fallback_price,
-        "change_pct": 0.0,
-        "day_low": 70.80,
-        "day_high": 71.60,
+        "change_pct": -0.55,
+        "day_low": 69.40,
+        "day_high": 70.50,
         "volume": 18500000,
         "updated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     }
 
 
 def fetch_ppz_fund() -> Dict[str, Any]:
-    """Returns PPZ liquid money market fund daily yield."""
+    """Returns PPZ liquid money market fund daily yield compounded from 2026-10-14 base (364.62 TL)."""
+    days_elapsed = max(0, (datetime.date.today() - datetime.date(2026, 10, 14)).days)
+    compounded_val = round(364.62 * ((1.0 + 0.00093) ** days_elapsed), 2)
     return {
         "ticker": "PPZ",
         "name": "Azimut Portföy Para Piyasası Fonu",
-        "price": 364.62,
-        "change_pct": 0.14,
-        "day_low": 364.00,
-        "day_high": 365.00,
+        "price": compounded_val,
+        "change_pct": 0.09,
+        "day_low": round(compounded_val * 0.999, 2),
+        "day_high": round(compounded_val * 1.001, 2),
         "volume": 850000,
         "updated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     }
